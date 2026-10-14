@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lucky Fortune Wall</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,600;0,800;1,500&family=Archivo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#120f26;--bg2:#1d1840;--ink:#f3eee3;--mute:#b4aed0;--gold:#e3b04b;--pink:#ff4f87;--teal:#38e0c8;--card:#241d4f;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#120f26}}
+:root[data-theme="dark"]{--bg:#120f26}
+*{box-sizing:border-box}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100%;background:radial-gradient(1200px 700px at 50% -10%,var(--bg2),var(--bg));color:var(--ink);font-family:Archivo,system-ui,sans-serif;font-size:18px;line-height:1.45}
+h1,h2,h3{font-family:'Bodoni Moda',Georgia,serif;margin:0;line-height:1.08}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
+#app{max-width:1100px;margin:0 auto;padding:20px 20px 40px;min-height:100vh;display:flex;flex-direction:column}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:48px}
+.brand{font-weight:800;letter-spacing:.04em;font-size:15px;color:var(--gold)}
+.ghost{background:none;border:2px solid #4b4388;border-radius:999px;padding:10px 18px;font-weight:600;min-height:48px}
+.ghost:hover{border-color:var(--gold)}
+.cta{background:var(--pink);border:0;border-radius:999px;padding:18px 44px;font-weight:800;font-size:22px;color:#fff;min-height:60px;box-shadow:0 0 0 0 rgba(255,79,135,.6);animation:pulse 2.2s infinite}
+.cta:disabled{background:#3b3566;color:#8b85b3;animation:none;cursor:not-allowed}
+.cta.calm{animation:none}
+@keyframes pulse{70%{box-shadow:0 0 0 22px rgba(255,79,135,0)}100%{box-shadow:0 0 0 0 rgba(255,79,135,0)}}
+main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:26px;padding:16px 0}
+.hero h1{font-size:clamp(34px,6.4vw,76px);font-weight:800;max-width:15ch;margin:0 auto}
+.hero p{font-size:clamp(18px,2.4vw,26px);color:var(--mute);margin:14px 0 0}
+.sub{color:var(--mute);max-width:56ch}
+/* cards */
+.row{display:flex;gap:clamp(10px,2.4vw,28px);justify-content:center;flex-wrap:nowrap;width:100%}
+.slot{display:flex;flex-direction:column;align-items:center;gap:10px;width:min(30%,230px)}
+.slot .lab{font-weight:800;font-size:15px;color:var(--gold)}
+.card{width:100%;aspect-ratio:2/3;perspective:900px;border:0;background:none;padding:0}
+.inner{position:relative;width:100%;height:100%;transition:transform .7s cubic-bezier(.3,.7,.2,1);transform-style:preserve-3d}
+.card.flipped .inner{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:14px;border:3px solid var(--gold);overflow:hidden}
+.back{background:url('images/back.jpg') center/cover,#1a1540}
+.front{transform:rotateY(180deg);background:linear-gradient(170deg,#f3eee3 0 55%,#e8dfca);color:#1b1535;padding:12px;display:flex;flex-direction:column;justify-content:space-between;text-align:left}
+.front .role{font-weight:800;font-size:clamp(11px,1.5vw,14px);color:var(--pink)}
+.front h3{font-size:clamp(14px,2.2vw,22px);font-weight:800}
+.front .line{font-family:'Bodoni Moda',serif;font-style:italic;font-size:clamp(11px,1.6vw,16px)}
+.front .art{flex:1;margin:8px 0;border-radius:6px;background:repeating-linear-gradient(45deg,#d6c9a6 0 8px,#e6dcc0 8px 16px);display:grid;place-items:center;font-size:clamp(10px,1.3vw,13px);color:#6b5f3e;text-align:center;padding:4px}
+.card.idle:not(.flipped) .inner{animation:bob 3.4s ease-in-out infinite}
+.slot:nth-child(2) .card.idle .inner{animation-delay:.5s}.slot:nth-child(3) .card.idle .inner{animation-delay:1s}
+@keyframes bob{50%{transform:translateY(-12px) rotate(1.5deg)}}
+.card.next .face.back{box-shadow:0 0 0 4px var(--teal),0 0 30px rgba(56,224,200,.6)}
+.card:disabled{cursor:default}.card.locked{opacity:.45}
+/* panels */
+.panel{background:#1d1844;border:2px solid #3d3578;border-radius:16px;padding:22px;max-width:760px;width:100%;text-align:left}
+.panel h2{font-size:clamp(24px,3.4vw,38px)}
+.badge{display:inline-block;background:#3b3566;color:var(--gold);font-weight:800;font-size:13px;padding:4px 10px;border-radius:6px;margin-bottom:8px}
+.badge.ph{background:var(--gold);color:#241a00}
+.poem{font-family:'Bodoni Moda',serif;font-style:italic;font-size:22px;color:var(--teal);margin:10px 0}
+.meta{color:var(--mute);font-size:16px}
+.links{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+a.btn,.btn{display:inline-flex;align-items:center;min-height:48px;padding:10px 18px;border-radius:999px;border:2px solid var(--teal);color:var(--teal);font-weight:600;text-decoration:none;background:none}
+.btn.off{border-color:#4b4388;color:#8b85b3;cursor:not-allowed}
+/* interests */
+.chips{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
+.chip{min-height:72px;padding:14px 28px;font-weight:800;font-size:22px;border-radius:14px;background:#241d4f;border:3px solid #4b4388}
+.chip[aria-pressed=true]{border-color:var(--pink);background:#3a1f58}
+.chip:disabled{opacity:.45;cursor:not-allowed}
+.chip small{display:block;font-weight:400;font-size:13px;color:var(--mute)}
+.seg{display:inline-flex;border:2px solid #4b4388;border-radius:999px;overflow:hidden}
+.seg button{background:none;border:0;padding:12px 20px;min-height:48px;font-weight:600}
+.seg button[aria-pressed=true]{background:var(--teal);color:#06231f}
+.prompt{font-size:clamp(20px,2.6vw,28px);font-weight:600;min-height:2.4em}
+.prog{display:flex;gap:8px;justify-content:center;align-items:center;color:var(--mute);font-weight:600}
+.dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--gold)}.dot.on{background:var(--gold)}
+.banner{background:var(--gold);color:#241a00;font-weight:600;font-size:14px;padding:8px 14px;border-radius:10px;text-align:center}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;width:100%}
+.grid3 .panel{padding:18px}.grid3 h2{font-size:clamp(20px,2.4vw,28px)}
+@media(max-width:760px){.grid3{grid-template-columns:1fr}#app{padding:14px}.cta{padding:16px 30px}}
+/* gesture mode */
+.gest-btn{display:inline-flex;align-items:center;gap:8px;background:none;border:2px solid #4b4388;border-radius:999px;padding:10px 16px;font-weight:600;min-height:48px;color:inherit;cursor:pointer;font:inherit}
+.gest-btn[data-on=true]{border-color:var(--teal);color:var(--teal)}
+.gest-btn[data-on=true] .dotg{background:var(--teal);box-shadow:0 0 10px var(--teal);animation:pulseg 1.4s infinite}
+.dotg{width:10px;height:10px;border-radius:50%;background:#4b4388;display:inline-block}
+@keyframes pulseg{50%{opacity:.35}}
+#gestvid{position:fixed;top:16px;right:16px;width:170px;height:128px;border-radius:12px;border:2px solid var(--teal);transform:scaleX(-1);background:#000;z-index:50;object-fit:cover;display:none;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+#gestvid.on{display:block}
+#gestcur{position:fixed;width:36px;height:36px;border-radius:50%;background:rgba(56,224,200,.35);border:3px solid var(--teal);box-shadow:0 0 24px rgba(56,224,200,.7);pointer-events:none;transform:translate(-50%,-50%);z-index:60;display:none;left:-100px;top:-100px}
+#gestcur.on{display:block}
+#geststat{position:fixed;bottom:16px;right:16px;background:rgba(0,0,0,.78);color:var(--ink);padding:10px 14px;border-radius:10px;font-size:14px;z-index:55;max-width:280px;line-height:1.35;display:none;border:1px solid #3d3578}
+#geststat.on{display:block}
+.card.dwell .face.back{box-shadow:0 0 0 5px var(--pink),0 0 40px rgba(255,79,135,.9)}
+.dwell-ring{position:absolute;top:-50px;left:50%;transform:translateX(-50%);width:42px;height:42px;border-radius:50%;background:conic-gradient(var(--pink) calc(var(--p,0)*360deg),rgba(255,255,255,.18) 0);display:grid;place-items:center;z-index:5;pointer-events:none}
+.dwell-ring::after{content:"";width:34px;height:34px;border-radius:50%;background:var(--bg)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01s!important}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<video id="gestvid" muted playsinline aria-hidden="true"></video>
+<div id="gestcur" aria-hidden="true"></div>
+<div id="geststat" role="status" aria-live="polite"></div>
+<script>
+/* ===== CONTENT: PLACEHOLDER ENTRIES ONLY. Replace with verified, sourced Newtown content before testing. ===== */
+const READINGS = {
+ 'music-001': { id:'music-001', interest:'music', verified:false,
+  past:{role:'past', title:'[Verified Newtown music story]', poeticLine:'Every street holds an echo.',
+   summary:'PLACEHOLDER: replace with a short, sourced story about Newtown\u2019s music history.', image:'images/past.jpg', sourceUrl:null},
+  present:{role:'present', title:'[Real Newtown music place]', poeticLine:'Follow the sound around the corner.',
+   summary:'PLACEHOLDER: replace with a verified description of a real, visitable music place.', address:'[Verified address]', mapUrl:null, sourceUrl:null, image:'images/present.jpg'},
+  future:{role:'future', title:'[Real upcoming music event]', poeticLine:'The next chapter is waiting.',
+   summary:'PLACEHOLDER: replace with a verified upcoming event, or a clearly labelled exploration suggestion.', date:null, venue:'[Real venue]', eventUrl:null, sourceUrl:null, evergreen:true, image:'images/future.jpg'}
+ }
+};
+const INTERESTS = [
+ {id:'music',label:'Music',reading:'music-001'},
+ {id:'art',label:'Art'},{id:'food',label:'Food'},{id:'history',label:'History'},{id:'hidden-places',label:'Hidden Places'}
+];
+const ROLES = ['past','present','future'];
+const ROLE_LABEL = {past:'Past \u00b7 Local story', present:'Present \u00b7 Local place', future:'Future \u00b7 Next step'};
+const WHO = {
+ 1:{past:'Reveal your Past card.',present:'Now reveal your Present card.',future:'Last one: reveal your Future card.'},
+ 2:{past:'Person A: reveal the Past card.',present:'Person B: reveal the Present card.',future:'Both of you: reveal the Future card together.'},
+ 3:{past:'Person A: reveal the Past card.',present:'Person B: reveal the Present card.',future:'Person C: reveal the Future card.'}
+};
+const S = {screen:'attract', people:1, interest:null, revealed:[], focus:null, readingId:null};
+const $app = document.getElementById('app');
+const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let idleT;
+
+function go(screen){ S.screen=screen; render(); window.scrollTo(0,0); }
+function reset(){ disableGesture(true); Object.assign(S,{screen:'attract',interest:null,revealed:[],focus:null,readingId:null,people:1}); history.replaceState(null,'',location.pathname+location.search); render(); }
+function bump(){ clearTimeout(idleT); if(S.screen!=='attract'&&!location.hash.startsWith('#/result/')) idleT=setTimeout(reset,120000); }
+document.addEventListener('pointerdown',bump); document.addEventListener('keydown',bump);
+
+const topBar = (back) => `<div class="top"><span class="brand">LUCKY FORTUNE WALL</span><span>${(S.screen==='interest'||S.screen==='draw')?`<button class="gest-btn" data-act="gest" data-on="${gestState().on}" ${gestState().loading?'disabled':''}><span class="dotg"></span>${gestState().on?'Hands on':(gestState().loading?'Starting…':'Use hands')}</button> `:''}${back?`<button class="ghost" data-act="back">Back</button> `:''}${S.screen!=='attract'?`<button class="ghost" data-act="restart">Restart</button>`:''}</span></div>`;
+function gestState(){ return (typeof gest !== 'undefined' && gest) ? gest : {on:false, loading:false}; }
+const cardBack = '';
+
+function cardHTML(role, rd, flipped, cls, attrs){
+  const c = rd[role];
+  return `<button class="card ${flipped?'flipped':''} ${cls||''}" ${attrs||''} aria-label="${flipped?esc(c.title):'Face-down '+role+' card'}">
+   <div class="inner"><div class="face back">${cardBack}</div>
+   <div class="face front" ${c.image?'style="padding:0;overflow:hidden;background:#1b1535"':''}>${c.image?`<img src="${esc(c.image)}" alt="" style="width:100%;height:100%;object-fit:cover;display:block">`:`<div class="role">${ROLE_LABEL[role]}</div><div class="art">image placeholder</div><div><h3>${esc(c.title)}</h3><div class="line">${esc(c.poeticLine)}</div></div>`}</div></div></button>`;
+}
+function banner(rd){ return rd.verified?'':`<div class="banner">PLACEHOLDER CONTENT. Not real Newtown facts. Replace with verified, sourced entries before user testing.</div>`; }
+
+function detail(role, rd){
+  const c = rd[role]; let facts='', acts='';
+  if(role==='present'){ facts=`<div class="meta">${esc(c.address)}</div>`; acts=link(c.mapUrl,'View on map'); }
+  if(role==='future'){ facts=`<div class="meta">${c.date?esc(c.date)+' \u00b7 ':''}${esc(c.venue)}${c.evergreen&&!c.date?' \u00b7 Exploration suggestion (no dated event)':''}</div>`; acts=link(c.eventUrl,'Event details'); }
+  if(role==='past') acts=link(c.sourceUrl,'Read more');
+  const src = role==='past'?'':link(c.sourceUrl,'Source');
+  return `<div class="panel"><span class="badge ${rd.verified?'':'ph'}">${ROLE_LABEL[role]}${rd.verified?'':' \u00b7 placeholder'}</span><h2>${esc(c.title)}</h2><div class="poem">${esc(c.poeticLine)}</div><p>${esc(c.summary)}</p>${facts}<div class="links">${acts}${src}</div></div>`;
+}
+function link(url,label){ return url?`<a class="btn" href="${esc(url)}" target="_blank" rel="noopener">${label}</a>`:`<span class="btn off" aria-disabled="true">${label} (link pending)</span>`; }
+
+function render(){
+  bump();
+  const rd = READINGS[S.readingId];
+  if(S.screen==='attract'){
+    const demo = READINGS['music-001'];
+    $app.innerHTML = `${topBar()}<main><div class="row" style="max-width:640px">${ROLES.map(r=>`<div class="slot"><div class="card idle"><div class="inner"><div class="face back">${cardBack}</div></div></div></div>`).join('')}</div>
+     <div class="hero"><h1>What does Newtown have for you today?</h1><p>Draw three cards. Discover a new side of Newtown.</p></div>
+     <button class="cta" data-act="start">Start</button></main>`;
+  }
+  if(S.screen==='interest'){
+    $app.innerHTML = `${topBar(true)}<main><h2 style="font-size:clamp(30px,5vw,52px)">What are you curious about?</h2>
+     <div class="chips">${INTERESTS.map(i=>`<button class="chip" data-int="${i.id}" aria-pressed="${S.interest===i.id}" ${i.reading?'':'disabled'}>${i.label}${i.reading?'':'<small>Coming soon</small>'}</button>`).join('')}</div>
+     <div><div class="meta" style="margin-bottom:8px">Who is drawing?</div><div class="seg" role="group" aria-label="Number of people">${[1,2,3].map(n=>`<button data-ppl="${n}" aria-pressed="${S.people===n}">${n===1?'Just me':n+' people'}</button>`).join('')}</div></div>
+     ${S.people>1?`<p class="sub">Three people. Three cards. One discovery. Pick one interest together.</p>`:''}
+     <button class="cta calm" data-act="toInterestNext" ${S.interest?'':'disabled'}>Continue</button></main>`;
+  }
+  if(S.screen==='draw'){
+    const n=S.revealed.length, nextRole=ROLES[n];
+    const f = S.focus&&S.revealed.includes(S.focus)?S.focus:S.revealed[n-1];
+    $app.innerHTML = `${topBar(true)}<main style="gap:18px">${banner(rd)}
+     <div class="prompt" aria-live="polite">${n<3?WHO[S.people][nextRole]:'All three cards revealed.'}</div>
+     <div class="prog" aria-label="${n} of 3 revealed">${[0,1,2].map(i=>`<span class="dot ${i<n?'on':''}"></span>`).join('')}<span>${n}/3</span></div>
+     <div class="row">${ROLES.map((r,i)=>{const fl=S.revealed.includes(r),nx=r===nextRole;
+       return `<div class="slot"><div class="lab">${r[0].toUpperCase()+r.slice(1)}</div>${cardHTML(r,rd,fl,fl?'':(nx?'next':'locked'),`data-card="${r}" ${fl||nx?'':'disabled'}`)}</div>`}).join('')}</div>
+     ${f?detail(f,rd):''}
+     ${n===3?`<button class="cta calm" data-act="toResult">See your reading</button>`:''}</main>`;
+  }
+  if(S.screen==='result'){
+    $app.innerHTML = `${topBar()}<main style="gap:18px">${banner(rd)}<h2 style="font-size:clamp(28px,4.4vw,48px)">Your Newtown reading</h2>
+     <div class="grid3">${ROLES.map(r=>detail(r,rd)).join('')}</div>
+     <div class="links" style="justify-content:center"><button class="cta calm" data-act="toExplore">Plan my exploring</button><button class="btn" data-act="copy">Copy result link</button></div><div class="meta" id="note" aria-live="polite"></div></main>`;
+  }
+  if(S.screen==='explore'){
+    const fu=rd.future, pr=rd.present;
+    $app.innerHTML = `${topBar(true)}<main style="gap:18px">${banner(rd)}<h2 style="font-size:clamp(28px,4.4vw,48px)">Where to next?</h2>
+     <p class="sub">${S.people>1?'Talk it over: which of these will you explore first, together?':'Pick one thing to explore this week.'}</p>
+     ${detail('present',rd)}${detail('future',rd)}
+     <div class="links"><button class="btn" data-act="copy">Copy result link</button><button class="cta calm" data-act="restart">Start over</button></div><div class="meta" id="note" aria-live="polite"></div></main>`;
+  }
+  const focusEl=$app.querySelector('[data-act=start],.cta:not(:disabled)'); 
+}
+
+$app.addEventListener('click',e=>{
+  const t=e.target.closest('button'); if(!t) return;
+  const a=t.dataset.act;
+  if(a==='start') go('interest');
+  else if(a==='restart') reset();
+  else if(a==='back'){ go({interest:'attract',draw:'interest',explore:'result'}[S.screen]||'attract'); }
+  else if(t.dataset.int){ S.interest=t.dataset.int; render(); }
+  else if(t.dataset.ppl){ S.people=+t.dataset.ppl; render(); }
+  else if(a==='toInterestNext'){ S.readingId=INTERESTS.find(i=>i.id===S.interest).reading; S.revealed=[]; S.focus=null; go('draw'); }
+  else if(t.dataset.card){
+    const r=t.dataset.card;
+    if(S.revealed.includes(r)){ S.focus=r; render(); }
+    else if(r===ROLES[S.revealed.length]){ S.revealed.push(r); S.focus=r; render(); }
+  }
+  else if(a==='toResult'){ history.replaceState(null,'','#/result/'+S.readingId); go('result'); }
+  else if(a==='toExplore'){ history.replaceState(null,'','#/explore/'+S.readingId); go('explore'); }
+  else if(a==='gest'){ toggleGesture(); }
+  else if(a==='copy'){
+    const url=location.origin+location.pathname+'#/result/'+S.readingId;
+    const done=()=>{const n=document.getElementById('note'); if(n) n.textContent='Link copied: anyone with it can open this reading.';};
+    (navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(done).catch(()=>{const n=document.getElementById('note'); if(n) n.textContent='Copy this link: '+url;});
+  }
+});
+
+/* open a shared result link directly */
+function fromHash(){
+  const m=location.hash.match(/^#\/(result|explore)\/([\w-]+)/);
+  if(m&&READINGS[m[2]]){ S.readingId=m[2]; S.interest=READINGS[m[2]].interest; S.revealed=[...ROLES]; S.screen=m[1]; }
+}
+try { fromHash(); } catch(e){ console.error('fromHash error:',e); }
+
+/* Show runtime errors on screen so the page never silently white-screens */
+window.addEventListener('error', ev=>{
+  const el = document.getElementById('geststat'); if(!el) return;
+  el.textContent = 'JS error: '+(ev.message||'unknown')+' — '+(ev.filename||'')+':'+(ev.lineno||'');
+  el.classList.add('on');
+});
+
+/* ===== Gesture mode (optional) =====
+   Uses MediaPipe HandLandmarker. Camera opens only after user clicks "Use hands".
+   Nothing is recorded or sent anywhere; stream stops as soon as mode exits. */
+const gest = { on:false, loading:false, stream:null, lm:null, raf:0, dwell:null, lastTs:0 };
+
+function setStat(msg, sticky){
+  const el = document.getElementById('geststat'); if(!el) return;
+  clearTimeout(gest.statT);
+  if(msg){ el.textContent = msg; el.classList.add('on'); if(!sticky) gest.statT = setTimeout(()=>el.classList.remove('on'), 5000); }
+  else el.classList.remove('on');
+}
+
+async function toggleGesture(){
+  if(gest.loading) return;
+  if(gest.on){ disableGesture(); return; }
+  gest.loading = true; render(); setStat('Loading hand model… first time may take a few seconds.', true);
+  try{
+    if(!gest.lm){
+      const mod = await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/+esm');
+      const fs = await mod.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm');
+      gest.lm = await mod.HandLandmarker.createFromOptions(fs, {
+        baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task' },
+        numHands:1, runningMode:'VIDEO'
+      });
+    }
+    setStat('Requesting camera…', true);
+    gest.stream = await navigator.mediaDevices.getUserMedia({ video:{ width:640, height:480, facingMode:'user' }, audio:false });
+    const v = document.getElementById('gestvid');
+    v.srcObject = gest.stream; await v.play(); v.classList.add('on');
+    gest.on = true; gest.loading = false;
+    setStat('Point your index finger at a card. Hold still for 1.5s to flip.');
+    render(); runLoop();
+  }catch(e){
+    gest.loading = false;
+    const msg = (e && e.name==='NotAllowedError') ? 'Camera access denied. Use touch instead.' : ('Camera unavailable: '+(e&&e.message||'error')+'. Use touch instead.');
+    setStat(msg); render();
+  }
+}
+
+function disableGesture(silent){
+  const was = gest.on; gest.on = false;
+  cancelAnimationFrame(gest.raf);
+  if(gest.stream){ gest.stream.getTracks().forEach(t=>t.stop()); gest.stream = null; }
+  const v = document.getElementById('gestvid'); if(v){ v.srcObject = null; v.classList.remove('on'); }
+  const c = document.getElementById('gestcur'); if(c) c.classList.remove('on');
+  resetDwell();
+  if(was && !silent) setStat('Camera off.');
+  else if(!was) setStat('');
+  render();
+}
+
+function runLoop(){
+  if(!gest.on) return;
+  const v = document.getElementById('gestvid');
+  if(v && v.readyState >= 2 && gest.lm){
+    const ts = performance.now();
+    if(ts - gest.lastTs > 16){ gest.lastTs = ts;
+      try{
+        const res = gest.lm.detectForVideo(v, ts);
+        if(res && res.landmarks && res.landmarks[0]){
+          const tip = res.landmarks[0][8];
+          const x = (1 - tip.x) * window.innerWidth;
+          const y = tip.y * window.innerHeight;
+          showCursor(x,y);
+          if(S.screen === 'draw') checkDwell(x,y); else resetDwell();
+        } else { hideCursor(); resetDwell(); }
+      }catch(e){/* skip bad frame */}
+    }
+  }
+  gest.raf = requestAnimationFrame(runLoop);
+}
+function showCursor(x,y){ const c=document.getElementById('gestcur'); if(!c) return; c.classList.add('on'); c.style.left=x+'px'; c.style.top=y+'px'; }
+function hideCursor(){ const c=document.getElementById('gestcur'); if(c) c.classList.remove('on'); }
+
+function checkDwell(x,y){
+  const el = document.elementFromPoint(x,y);
+  const card = el && el.closest ? el.closest('.card.next') : null;
+  if(!card){ resetDwell(); return; }
+  const now = performance.now();
+  if(gest.dwell && gest.dwell.el === card){
+    const p = Math.min(1,(now - gest.dwell.t)/1500);
+    const r = card.querySelector('.dwell-ring'); if(r) r.style.setProperty('--p', p);
+    if(p >= 1){ const target = gest.dwell.el; resetDwell(); target.click(); }
+  } else {
+    resetDwell();
+    gest.dwell = { el:card, t:now };
+    card.classList.add('dwell');
+    const ring = document.createElement('div'); ring.className = 'dwell-ring'; ring.style.setProperty('--p', 0);
+    card.appendChild(ring);
+  }
+}
+function resetDwell(){
+  if(!gest.dwell) return;
+  const el = gest.dwell.el; gest.dwell = null;
+  if(el){ el.classList.remove('dwell'); const r = el.querySelector('.dwell-ring'); if(r) r.remove(); }
+}
+window.addEventListener('beforeunload', ()=>disableGesture(true));
+document.addEventListener('visibilitychange', ()=>{ if(document.hidden && gest.on) disableGesture(true); });
+
+try { render(); } catch(e){
+  console.error('render error:',e);
+  document.getElementById('app').innerHTML = '<div style="padding:40px;max-width:600px;margin:40px auto;background:#1d1844;border:2px solid #ff4f87;border-radius:16px"><h2 style="font-family:Georgia,serif;color:#ff4f87;margin:0 0 12px">Something went wrong starting the page.</h2><p>'+String(e&&e.message||e)+'</p><p style="color:#b4aed0;font-size:14px">Open the browser console (F12) for the full stack trace.</p></div>';
+}
+</script>
+</body>
+</html>

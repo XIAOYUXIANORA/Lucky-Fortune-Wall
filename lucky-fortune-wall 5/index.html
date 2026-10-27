@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lucky Fortune Wall</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#101018; --bg2:#1E1A2A; --ink:#F3EEE6; --mute:#95899F;
+  --gold:#D1B98C; --gold-dim:#8c7c5c;
+  --cream:#F6F0E3; --pink:#F0B9B2; --teal:#9ED5CE; --coral:#F4A896;
+}
+*{box-sizing:border-box}
+html{height:100%}
+body{margin:0;min-height:100%;background:radial-gradient(ellipse 1400px 900px at 50% -20%,#1E1A2A,#101018 70%);color:var(--ink);font-family:Inter,system-ui,sans-serif;font-size:17px;line-height:1.5;overflow-x:hidden}
+h1,h2,h3,.serif{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;margin:0;line-height:1.12;letter-spacing:.01em}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+img{display:block;max-width:100%}
+
+#app{max-width:1200px;margin:0 auto;padding:18px 20px 40px;min-height:100vh;display:flex;flex-direction:column;position:relative;z-index:2}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:48px;margin-bottom:8px}
+.brand{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;letter-spacing:.22em;color:var(--gold);text-transform:uppercase}
+.topR{display:flex;gap:8px;align-items:center}
+
+/* buttons */
+.iconBtn{background:transparent;border:1px solid rgba(209,185,140,.35);border-radius:50%;width:40px;height:40px;display:inline-grid;place-items:center;color:var(--mute);padding:0;transition:all .25s}
+.iconBtn:hover{border-color:var(--gold);color:var(--gold)}
+.iconBtn[data-on="true"]{border-color:var(--gold);color:var(--gold)}
+.iconBtn[data-on="true"] svg{filter:drop-shadow(0 0 8px rgba(209,185,140,.6))}
+.iconBtn svg{width:18px;height:18px}
+.ghost{background:transparent;border:1px solid rgba(209,185,140,.4);color:var(--mute);border-radius:999px;padding:8px 18px;font-weight:500;min-height:40px;font-size:14px;letter-spacing:.08em;text-transform:uppercase;transition:all .25s}
+.ghost:hover{color:var(--gold);border-color:var(--gold)}
+.cta{background:var(--gold);color:#1a1510;border:0;border-radius:999px;padding:16px 42px;font-weight:600;font-size:16px;letter-spacing:.18em;text-transform:uppercase;min-height:56px;transition:all .3s;position:relative;overflow:hidden}
+.cta::before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 40%,rgba(255,255,255,.3) 50%,transparent 60%);transform:translateX(-100%);transition:transform .7s}
+.cta:hover::before{transform:translateX(100%)}
+.cta:disabled{background:#3a3344;color:#6a6176;cursor:not-allowed}
+.cta:disabled::before{display:none}
+.cta.ghost-cta{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+
+main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:26px;padding:16px 0;position:relative}
+
+/* ambient star field (very subtle) */
+.stars{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.5}
+
+/* attract */
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:clamp(42px,7vw,88px);font-weight:400;max-width:14ch;margin:0 auto;font-style:italic;color:var(--cream)}
+.hero p{font-size:clamp(16px,2vw,22px);color:var(--mute);margin:18px 0 0;letter-spacing:.04em;font-style:normal}
+.hero .tag{display:inline-block;font-size:13px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:28px}
+.heroCards{display:flex;gap:clamp(16px,2.4vw,32px);justify-content:center;align-items:center;margin:36px 0 24px;perspective:1200px;position:relative;min-height:300px}
+.hc{display:inline-block;transform-origin:center bottom;position:relative}
+.hc1{transform:rotate(-10deg) translateY(10px)}
+.hc2{transform:rotate(0deg) translateY(-18px) scale(1.1);z-index:3}
+.hc3{transform:rotate(10deg) translateY(10px)}
+.heroCards .ac{width:min(180px,28vw);aspect-ratio:2/3;border-radius:10px;border:1px solid var(--gold);background:url('images/back.jpg') center/cover,#1a1540;box-shadow:0 24px 60px rgba(0,0,0,.65);position:relative;overflow:hidden;animation:bob 3.8s ease-in-out infinite}
+.hc1 .ac{animation-delay:.6s}
+.hc2 .ac{animation:bob2 4s ease-in-out infinite}
+.hc3 .ac{animation-delay:1.2s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes bob2{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+/* Shimmer light sweep */
+.heroCards .ac::before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 32%,rgba(243,238,230,.45) 50%,transparent 68%);transform:translateX(-130%) skewX(-20deg);animation:shimmer 5s ease-in-out infinite;pointer-events:none}
+.hc1 .ac::before{animation-delay:0s}
+.hc2 .ac::before{animation-delay:1.6s}
+.hc3 .ac::before{animation-delay:3.2s}
+@keyframes shimmer{0%,70%{transform:translateX(-130%) skewX(-20deg)}100%{transform:translateX(140%) skewX(-20deg)}}
+/* Pass-by ghost card drifting across behind the trio */
+.passby{position:absolute;top:50%;left:50%;width:min(130px,20vw);aspect-ratio:2/3;border-radius:9px;border:1px solid var(--gold);background:url('images/back.jpg') center/cover,#1a1540;transform:translate(-50%,-50%);opacity:0;animation:passby 9s ease-in-out infinite;z-index:0;filter:blur(.5px)}
+.passby.p2{animation-delay:4.5s;width:min(100px,16vw)}
+@keyframes passby{
+  0%{transform:translate(calc(-50% - 480px),-50%) rotate(-30deg) scale(.55);opacity:0}
+  10%{opacity:.42}
+  48%{transform:translate(calc(-50% - 10px),calc(-50% - 20px)) rotate(-4deg) scale(.78);opacity:.5}
+  55%{transform:translate(calc(-50% + 10px),calc(-50% - 20px)) rotate(4deg) scale(.78);opacity:.5}
+  90%{opacity:.3}
+  100%{transform:translate(calc(-50% + 480px),-50%) rotate(30deg) scale(.55);opacity:0}
+}
+
+/* interest page */
+.sectionTitle{font-size:clamp(28px,4vw,44px);font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;color:var(--cream);margin-bottom:4px}
+.sectionSub{color:var(--mute);font-size:14px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:12px}
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:860px;width:100%}
+@media(max-width:700px){.chips{grid-template-columns:repeat(2,1fr)}}
+.chip{background:rgba(243,238,230,.03);border:1px solid rgba(209,185,140,.25);border-radius:3px;padding:22px 18px;text-align:left;transition:all .3s;position:relative;min-height:110px;display:flex;flex-direction:column;justify-content:space-between;gap:10px}
+.chip:hover{background:rgba(243,238,230,.06);border-color:var(--gold);transform:translateY(-2px)}
+.chip[aria-pressed="true"]{background:rgba(209,185,140,.12);border-color:var(--gold)}
+.chip .name{font-family:'Cormorant Garamond',serif;font-size:26px;font-style:italic;color:var(--cream);line-height:1}
+.chip .tag{font-size:11px;color:var(--mute);letter-spacing:.2em;text-transform:uppercase}
+
+.seg{display:inline-flex;border:1px solid rgba(209,185,140,.35);border-radius:999px;overflow:hidden;background:rgba(0,0,0,.2)}
+.seg button{background:transparent;border:0;padding:12px 22px;min-height:44px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);transition:all .25s}
+.seg button[aria-pressed="true"]{background:var(--gold);color:#1a1510}
+
+/* Hidden Places subpath page */
+.pathChoice{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:720px;width:100%}
+@media(max-width:600px){.pathChoice{grid-template-columns:1fr}}
+.pathCard{position:relative;background:rgba(243,238,230,.03);border:1px solid rgba(209,185,140,.25);border-radius:3px;padding:34px 24px;text-align:left;transition:all .3s;min-height:260px;display:flex;flex-direction:column;justify-content:space-between;gap:16px;overflow:hidden;cursor:pointer}
+.pathCard:hover{background:rgba(243,238,230,.06);border-color:var(--gold);transform:translateY(-2px)}
+.pathCard .glyph{font-size:38px;color:var(--gold);line-height:1}
+.pathCard h3{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:30px;color:var(--cream)}
+.pathCard p{color:var(--mute);font-size:14px;line-height:1.6}
+.pathCard .goBtn{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+
+/* Ring draw page */
+.prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(22px,2.6vw,30px);color:var(--cream);min-height:1.5em}
+.prompt .cnt{color:var(--mute);font-size:14px;font-style:normal;letter-spacing:.2em;margin-left:10px}
+.ring{position:relative;width:100%;height:420px;margin:0 auto;max-width:1100px;touch-action:none;user-select:none;-webkit-user-select:none;overflow:visible;background:radial-gradient(ellipse at 50% 55%,rgba(209,185,140,.1),transparent 65%)}
+.ring-perspective{position:absolute;inset:0;perspective:1300px;perspective-origin:50% 55%}
+.ring-inner{position:absolute;top:50%;left:50%;width:0;height:0;transform-style:preserve-3d;transform:translate3d(-50%,-50%,0) rotateX(14deg) rotateY(var(--ring-rot,0deg));transition:transform .3s ease-out;will-change:transform}
+.rc{position:absolute;top:0;left:0;width:112px;height:168px;margin:-84px 0 0 -56px;transform-style:preserve-3d;transform:rotateY(var(--card-ang,0deg)) translateZ(300px);backface-visibility:hidden;transition:opacity .5s,transform .7s cubic-bezier(.4,.1,.4,1)}
+.rc .face{width:100%;height:100%;border-radius:8px;border:1px solid var(--gold);background:url('images/back.jpg') center/cover,#1a1540;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.rc.focus .face{box-shadow:0 0 0 2px var(--gold),0 0 36px rgba(209,185,140,.55),0 10px 30px rgba(0,0,0,.5)}
+.rc.fist .face{box-shadow:0 0 0 3px var(--coral),0 0 48px rgba(244,168,150,.8),0 10px 30px rgba(0,0,0,.5)}
+.rc.drawn{opacity:0;transform:rotateY(var(--card-ang,0deg)) translateZ(300px) translateY(400px) scale(.2)}
+#fistRing{position:fixed;width:72px;height:72px;border-radius:50%;background:conic-gradient(var(--coral) calc(var(--fp,0)*360deg),rgba(255,255,255,.12) 0);display:none;place-items:center;pointer-events:none;z-index:58;transform:translate(-50%,-50%)}
+#fistRing::after{content:"";width:60px;height:60px;border-radius:50%;background:var(--bg)}
+#fistRing.on{display:grid}
+/* Gesture-aimed button highlight (any screen) */
+.gest-aim{outline:2px solid var(--coral)!important;outline-offset:4px!important;box-shadow:0 0 24px rgba(244,168,150,.35)!important;transition:outline .15s,box-shadow .15s}
+.ring-badge{position:absolute;top:14px;left:50%;transform:translateX(-50%);color:var(--mute);padding:6px 20px;font-size:11px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;z-index:4;background:rgba(16,16,24,.6);border:1px solid rgba(209,185,140,.3);border-radius:999px}
+.ring-badge b{color:var(--gold);margin-left:8px;font-weight:600}
+.hint{color:var(--mute);font-size:13px;letter-spacing:.08em;min-height:1.4em}
+
+/* Slots for drawn cards (ground row) */
+.slots{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:4px}
+.sl{width:120px;aspect-ratio:2/3;border-radius:8px;border:1px dashed rgba(209,185,140,.35);display:grid;place-items:center;color:var(--mute);font-size:10px;letter-spacing:.26em;text-transform:uppercase;perspective:900px;position:relative}
+.sl.on{border-color:var(--gold);border-style:solid;color:transparent;background:transparent;overflow:hidden}
+.sl.on::after{content:"";position:absolute;inset:0;background:url('images/back.jpg') center/cover;border-radius:8px}
+.sl.on.flipped::after{display:none}
+.sl.on img{width:100%;height:100%;object-fit:cover;border-radius:8px;opacity:0;transition:opacity .6s}
+.sl.on.flipped img{opacity:1}
+
+/* Reveal / result panels */
+.panel{background:rgba(243,238,230,.03);border:1px solid rgba(209,185,140,.25);border-radius:3px;padding:28px;max-width:780px;width:100%;text-align:left;position:relative;overflow:hidden}
+.panel .role{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.panel h2{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(28px,4vw,44px);color:var(--cream);margin-bottom:14px}
+.panel .poem{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--teal);font-size:19px;margin:0 0 16px}
+.panel p{margin:0 0 10px;color:#DEDAD1}
+.panel .zh{color:var(--mute);font-size:14px;margin-top:4px}
+.panel .meta{color:var(--mute);font-size:14px;margin-top:12px;letter-spacing:.03em}
+.linkRow{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+a.btn,.btn{display:inline-flex;align-items:center;min-height:42px;padding:8px 20px;border-radius:999px;border:1px solid var(--gold);color:var(--gold);font-weight:600;font-size:12px;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;background:transparent;transition:all .25s}
+a.btn:hover,.btn:hover{background:rgba(209,185,140,.1)}
+.btn.off{border-color:rgba(209,185,140,.25);color:var(--mute);cursor:not-allowed}
+.btn.off:hover{background:transparent}
+.flyer{margin:16px 0 6px;max-width:320px;border-radius:4px;box-shadow:0 10px 30px rgba(0,0,0,.4);display:block}
+
+/* Result grid */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;width:100%;max-width:1100px}
+.grid3 .panel{padding:20px}
+.grid3 .panel h2{font-size:clamp(22px,2.4vw,28px)}
+.grid3 .panel .poem{font-size:16px}
+.grid3 .flyer{max-width:100%}
+@media(max-width:900px){.grid3{grid-template-columns:1fr}}
+.fortune{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(22px,3.2vw,34px);color:var(--gold);text-align:center;max-width:720px;margin:14px auto;letter-spacing:.02em;line-height:1.3}
+.fortune .zh{display:block;font-size:16px;color:var(--mute);margin-top:10px;font-style:normal;letter-spacing:.1em}
+
+/* Library CTA / explore page */
+.libHeader{text-align:center;max-width:760px}
+.libBadge{display:inline-block;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold);padding:5px 14px;border-radius:999px;margin-bottom:16px}
+.libMap{width:100%;max-width:900px;border-radius:4px;border:1px solid rgba(209,185,140,.3);margin:14px 0;background:#f5efe3}
+.libStep{display:flex;gap:14px;padding:14px 0;border-top:1px solid rgba(209,185,140,.15)}
+.libStep:last-child{border-bottom:1px solid rgba(209,185,140,.15)}
+.libStep .n{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:28px;color:var(--gold);min-width:40px;line-height:1}
+.libStep .t{font-weight:600;color:var(--cream);margin-bottom:4px}
+.libStep .d{color:var(--mute);font-size:14px}
+
+/* Banner */
+.banner{background:rgba(209,185,140,.08);color:var(--gold);font-size:12px;padding:10px 16px;border-radius:3px;border:1px solid rgba(209,185,140,.3);letter-spacing:.1em;max-width:780px;text-align:center}
+
+/* Note / toast */
+#note{color:var(--mute);font-size:13px;min-height:1.4em;letter-spacing:.08em}
+
+/* Gesture video + cursor + particles */
+#gestvid{position:fixed;top:16px;right:16px;width:170px;height:128px;border-radius:4px;border:1px solid var(--gold);transform:scaleX(-1);background:#000;z-index:50;object-fit:cover;display:none;box-shadow:0 10px 30px rgba(0,0,0,.6)}
+#gestvid.on{display:block}
+#gestcur{position:fixed;width:30px;height:30px;border-radius:50%;background:rgba(209,185,140,.35);border:2px solid var(--gold);box-shadow:0 0 20px rgba(209,185,140,.7);pointer-events:none;transform:translate(-50%,-50%);z-index:60;display:none;left:-100px;top:-100px}
+#gestcur.on{display:block}
+#geststat{position:fixed;bottom:16px;right:16px;background:rgba(0,0,0,.85);color:var(--ink);padding:10px 14px;border-radius:3px;font-size:13px;z-index:55;max-width:280px;line-height:1.4;display:none;border:1px solid rgba(209,185,140,.3)}
+#geststat.on{display:block}
+#particles{position:fixed;inset:0;pointer-events:none;z-index:45}
+
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01s!important}}
+</style>
+</head>
+<body>
+<svg class="stars" aria-hidden="true"><defs><radialGradient id="sg"><stop offset="0" stop-color="#D1B98C" stop-opacity=".9"/><stop offset="1" stop-color="#D1B98C" stop-opacity="0"/></radialGradient></defs><g id="starG"></g></svg>
+<div id="app"></div>
+<canvas id="particles" aria-hidden="true"></canvas>
+<video id="gestvid" muted playsinline aria-hidden="true"></video>
+<div id="gestcur" aria-hidden="true"></div>
+<div id="fistRing" aria-hidden="true"></div>
+<div id="geststat" role="status" aria-live="polite"></div>
+<script>
+/* ============================================================
+   LUCKY FORTUNE WALL · V2
+   All six themes + Mystical Newtown subpath.
+   Content from Lucky_Fortune_Wall_Tarot_Stories.md.
+   ============================================================ */
+
+const INTERESTS = [
+  {id:'music',   label:'Music',          theme:'Follow the Sounds of Newtown', reading:'music-001'},
+  {id:'art',     label:'Art',            theme:'The Streets Are Speaking',     reading:'art-001'},
+  {id:'food',    label:'Food',           theme:'A Taste of Newtown',           reading:'food-001'},
+  {id:'history', label:'History',        theme:'Walk Through Time',            reading:'history-001'},
+  {id:'hidden',  label:'Hidden Places',  theme:'Beyond the Busy Street',       hasSubpath:true,
+                 defaultReading:'hidden-quiet-001', mysticalReading:'hidden-mystical-001'},
+  {id:'voices',  label:'Stories & Voices', theme:'Every Voice Has a Story',    reading:'voices-001'},
+];
+
+const READINGS = {
+'music-001': {
+  interest:'music',
+  final:{en:'Your Newtown story has a soundtrack. Find where it plays next.',
+         zh:'你的 Newtown 故事有自己的背景音乐。去寻找下一段正在发生的声音。'},
+  past:{title:'The Echo', role:'Past · Local Story', poem:'Every neighbourhood has its own soundtrack.',
+    en:"Built in 1908, the Enmore Theatre has witnessed generations of entertainment and cultural change. Its survival reminds us that Newtown's stories are also carried through performances, audiences, and the places where they gather.",
+    zh:'1908 年建成的 Enmore Theatre 见证了不同年代的娱乐与文化变迁。Newtown 的音乐记忆不只存在于音乐本身，也藏在一次次演出、聚集与共同经历中。',
+    image:'images/music-past.jpg'},
+  present:{title:'The Stage', role:'Present · Local Place', poem:'Some stories are better experienced live.',
+    en:"At Enmore Theatre, music and performance continue to bring people together. Behind its historic façade, each programme is an opportunity to discover another side of Newtown's cultural life.",
+    zh:'Enmore Theatre 至今仍是人们观看演出、聚集交流的文化空间。历史建筑的外立面背后，仍然有不断更新的节目与体验。',
+    place:'Enmore Theatre · 118–132 Enmore Road, Newtown',
+    mapUrl:'https://www.google.com/maps/search/?api=1&query=Enmore+Theatre+Newtown',
+    image:'images/music-present.jpg'},
+  future:{title:'The Invitation', role:'Future · Action', poem:'Your next memory might begin with a ticket.',
+    en:"The next song hasn't started yet. Browse an upcoming performance, choose something that catches your attention, and let one night of music introduce you to a new side of Newtown.",
+    zh:'下一首歌还没开始。看看近期有哪些演出，选择你感兴趣的一场，让一次音乐体验成为探索 Newtown 的新起点。',
+    ctaLabel:'Discover Upcoming Shows', ctaUrl:'https://www.enmoretheatre.com.au/',
+    image:'images/music-future.jpg'}
+},
+'art-001': {
+  interest:'art',
+  final:{en:'The streets have something to say. Look a little closer.',
+         zh:'街道也会讲故事，只要你再仔细看一点。'},
+  past:{title:'The Mark', role:'Past · Local Story', poem:'Not every story belongs in a gallery.',
+    en:"Posters, murals and other forms of street expression have long helped make Newtown's cultural life visible. The layers left on walls tell us that creative expression can belong to everyday public space, not only to galleries.",
+    zh:'海报、壁画和其他街头表达一直是 Newtown 文化景观的一部分。墙面上的层层痕迹提醒我们：艺术不仅存在于画廊，也存在于日常街道中。',
+    image:'images/art-past.jpg'},
+  present:{title:'The Canvas', role:'Present · Local Place', poem:'Art is waiting where you least expect it.',
+    en:'Look for Newtown ArtSeat in Pride Square. This public art display brings artwork into a space people pass through every day, inviting them to stop and look more closely.',
+    zh:'在 Pride Square 留意 Newtown ArtSeat。公共艺术被带入人们每天经过的空间，邀请路人停下来，仔细观察。',
+    place:'Newtown ArtSeat · Pride Square, Newtown',
+    mapUrl:'https://www.google.com/maps/search/?api=1&query=Pride+Square+Newtown',
+    image:'images/art-present.jpg'},
+  future:{title:'The New Perspective', role:'Future · Action', poem:'The next artwork you discover may change the way you see this street.',
+    en:'Look at the latest public art display, or revisit an artwork you usually walk past. Take a moment to notice who made it and what it might be trying to communicate.',
+    zh:'留意最新的公共艺术展示，或者重新看看平时经常经过的一件作品。花一点时间了解作者，并想想它在表达什么。',
+    ctaLabel:'Discover Local Art', ctaUrl:'https://www.innerwest.nsw.gov.au/explore/arts-culture-and-history',
+    image:'images/art-future.jpg', flyer:'images/flyer-art.jpg'}
+},
+'food-001': {
+  interest:'food',
+  final:{en:'Every flavour is a doorway to a different story.',
+         zh:'每一种味道，都是通往另一个故事的入口。'},
+  past:{title:'The Shared Table', role:'Past · Local Story', poem:'Every flavour carries a story.',
+    en:"Newtown's food culture reflects people from different backgrounds who have made the area their home. Over time, migration, small businesses, and everyday exchange have contributed to the neighbourhood's variety of food traditions.",
+    zh:'Newtown 的饮食文化反映了不同背景的人们在这里生活、经营小店和分享传统的过程。多样的味道，也构成了街区日常文化的一部分。',
+    image:'images/food-past.jpg'},
+  present:{title:'The Flavour', role:'Present · Local Place', poem:'Sometimes, a new place begins with a new taste.',
+    en:'Walk along King Street and notice the range of cafés, bakeries and restaurants around you. The food on this street offers an everyday glimpse of how different communities meet and coexist in Newtown.',
+    zh:'沿着 King Street 走走，看看不同类型的咖啡馆、烘焙店和餐厅。街上的食物，让人感受到不同社群在 Newtown 相遇与共存的日常。',
+    place:'King Street, Newtown',
+    mapUrl:'https://www.google.com/maps/search/?api=1&query=King+Street+Newtown',
+    image:'images/food-present.jpg'},
+  future:{title:'The First Bite', role:'Future · Action', poem:"Your next favourite place might be somewhere you've never tried.",
+    en:'Take a small detour along King Street. Choose a café, bakery or restaurant that sparks your curiosity, and try something new. One unfamiliar flavour may become part of your Newtown routine.',
+    zh:'下次沿着 King Street 散步，不妨走进一家从未尝试过的小店，点一道新食物。一个陌生的味道，也许会慢慢变成你的 Newtown 日常。',
+    ctaLabel:'Explore Food on King Street', ctaUrl:'https://www.google.com/maps/search/?api=1&query=King+Street+Newtown+cafes',
+    image:'images/food-future.jpg', flyer:'images/flyer-food.jpg'}
+},
+'history-001': {
+  interest:'history',
+  final:{en:'The past is still here, waiting to be noticed.',
+         zh:'过去并没有消失，它一直等待着被人发现。'},
+  past:{title:'The Arrival', role:'Past · Local Story', poem:'Every place has a moment that changes its path.',
+    en:'The railway opened through Newtown in 1855, connecting the area more closely with Sydney. As transport, population and commerce developed, the neighbourhood became an increasingly active place to live, trade and gather.',
+    zh:'1855 年铁路开通，让 Newtown 与悉尼其他地区的联系更加紧密。交通、人口和商业活动的发展，逐渐塑造出今天的街区格局。',
+    image:'images/history-past.jpg'},
+  present:{title:'The Timekeeper', role:'Present · Local Place', poem:'The past is not gone. It is hidden in plain sight.',
+    en:'Look above the shop windows along King Street. Historic façades and architectural details remain visible beside newer signs and businesses, revealing how different periods of Newtown exist together.',
+    zh:'在 King Street 抬头看看店铺橱窗上方。老建筑立面与今天的招牌并存，让街道同时呈现不同时代的痕迹。',
+    place:'King Street historic streetscape, Newtown',
+    mapUrl:'https://www.google.com/maps/search/?api=1&query=King+Street+Newtown',
+    image:'images/history-present.jpg'},
+  future:{title:'The Footsteps', role:'Future · Action', poem:'To discover the past, sometimes you only need to look up.',
+    en:'Begin near Newtown Station and walk a short stretch of King Street. Pick one old-looking building, study its details and find out what you can about its earlier life.',
+    zh:'从 Newtown Station 附近出发，在 King Street 走一小段路。挑一栋看起来有历史的建筑，观察它的细节，并尝试查找它过去的故事。',
+    ctaLabel:'Start Your History Walk', ctaUrl:'https://www.google.com/maps/search/?api=1&query=Newtown+Station+Sydney',
+    image:'images/history-future.jpg', flyer:'images/flyer-history.jpg'}
+},
+'hidden-quiet-001': {
+  interest:'hidden', subpath:'quiet',
+  final:{en:'Sometimes the most meaningful discoveries are the quiet ones.',
+         zh:'有时，最值得发现的地方，反而最安静。'},
+  past:{title:'The Hidden Layer', role:'Past · Local Story', poem:'Some places hold more than one story.',
+    en:"The grounds of today's Camperdown Memorial Rest Park have a history as a cemetery dating to the nineteenth century. The place has changed over time, while traces of its earlier use remain part of the landscape.",
+    zh:'今天的 Camperdown Memorial Rest Park 曾有十九世纪墓地的历史。空间的用途后来发生变化，但过去留下的痕迹仍然存在。',
+    image:'images/hidden-past.jpg'},
+  present:{title:'The Quiet Space', role:'Present · Local Place', poem:'Not every discovery needs to be loud.',
+    en:'Away from the busy commercial streets, Camperdown Memorial Rest Park offers a public green space for slowing down and noticing a different rhythm of local life.',
+    zh:'从热闹的商业街转一个方向，Camperdown Memorial Rest Park 提供了一处可以放慢脚步的公共绿地，让人感受 Newtown 生活中安静的一面。',
+    place:'Camperdown Memorial Rest Park · Church Street, Newtown',
+    mapUrl:'https://www.google.com/maps/search/?api=1&query=Camperdown+Memorial+Rest+Park',
+    image:'images/hidden-present.jpg'},
+  future:{title:'The Detour', role:'Future · Action', poem:'The best discoveries sometimes begin by leaving your usual route.',
+    en:'Take a quiet walk through the park. Notice the trees and historic surroundings, and explore respectfully: this landscape also preserves an important memorial and cemetery history.',
+    zh:'在公园里慢慢走一段路，观察树木和周围的历史环境。这里仍保留着纪念与墓地历史，探索时请保持尊重。',
+    ctaLabel:'Discover a Quieter Newtown', ctaUrl:'https://www.google.com/maps/search/?api=1&query=Camperdown+Memorial+Rest+Park',
+    image:'images/hidden-future.jpg'}
+},
+'hidden-mystical-001': {
+  interest:'hidden', subpath:'mystical',
+  final:{en:'Sometimes the mystery is simply noticing what was always there.',
+         zh:'有时候，神秘感就藏在那些一直存在、却从未被注意的事物里。'},
+  past:{title:'The Symbol', role:'Past · Local Story', poem:'Every symbol holds a different meaning.',
+    en:'For centuries, people have used cards, stars and symbols to ask questions about uncertainty. Tarot can also be a playful way to reflect and notice familiar things from a different perspective.',
+    zh:'长期以来，人们通过卡牌、星象和符号探索未知。塔罗也可以是一种有趣的提问与观察方式，让熟悉的东西变得不一样。',
+    image:'images/mystical-past.jpg'},
+  present:{title:'The Mystic Street', role:'Present · Local Place', poem:'A little mystery hides in plain sight.',
+    en:'Along King Street, you may notice windows displaying crystals, tarot cards and mystical symbols. These curious details offer a glimpse of the street\'s eclectic cultural character.',
+    zh:'沿着 King Street，你可能会发现展示水晶、塔罗牌与神秘符号的橱窗。这些细节构成了街道多样文化气质的一部分。',
+    place:'King Street, Newtown · self-guided (no specific shop)',
+    mapUrl:'https://www.google.com/maps/search/?api=1&query=King+Street+Newtown',
+    image:'images/mystical-present.jpg'},
+  future:{title:'The Seeker', role:'Future · Action', poem:'Follow your curiosity. See where it takes you.',
+    en:"Wander along King Street and look for a mysterious corner. Notice a symbol you've never seen before, explore an interesting window display, or simply let something unexpected catch your eye.",
+    zh:'沿着 King Street 散步，看看能否找到一个带有神秘气质的角落。留意陌生的符号、有趣的橱窗，或一个平时容易错过的细节。',
+    ctaLabel:'Explore the Mystical Side', ctaUrl:'https://www.google.com/maps/search/?api=1&query=King+Street+Newtown',
+    image:'images/mystical-future.jpg', flyer:'images/flyer-mystical.jpg'}
+},
+'voices-001': {
+  interest:'voices',
+  final:{en:'Every place has a story. Sometimes, you need to hear it from someone else.',
+         zh:'每个地方都有故事。有时，你需要听别人亲口讲述。'},
+  past:{title:'The Memory', role:'Past · Local Story', poem:'Some places have lived more than one life.',
+    en:'Before it became Newtown Library, the building on Brown Street was associated with the Salvation Army Citadel. Its changing role reminds us that buildings can carry the memories of different communities over time.',
+    zh:'Brown Street 上的 Newtown Library 建筑曾与 Salvation Army Citadel 有关。建筑用途的变化，也让我们看到不同年代社区生活留下的痕迹。',
+    image:'images/voices-past.jpg'},
+  present:{title:'The Listener', role:'Present · Local Place', poem:'A story becomes meaningful when someone listens.',
+    en:"On Brown Street, Newtown Library offers a place for reading, learning and spending time. But some of Newtown's most personal stories live in the voices of people who call the neighbourhood home.",
+    zh:'Brown Street 的 Newtown Library 是一个阅读、学习与停留的空间。而 Newtown 许多最个人化的故事，也存在于当地居民自己的声音中。',
+    place:'Newtown Library · 8–10 Brown Street, Newtown',
+    mapUrl:'https://www.google.com/maps/search/?api=1&query=Newtown+Library+Brown+Street+Newtown',
+    image:'images/voices-present.jpg'},
+  future:{title:'The Borrowed Voice', role:'Future · Action', poem:"Your next discovery isn't a place. It's a person.",
+    en:"Visit the proposed Listening Library experience on Brown Street. Choose a local resident's story, listen to their voice and leave a little echo of your own. You can also sit with someone else and exchange what you heard. Some connections begin with simply listening.",
+    zh:'前往 Brown Street 图书馆内的小组互动装置。选择一位 Newtown 居民的故事，听一段声音，留下自己的简短回声；也可以与其他聆听者交流。人与地方的联系，有时从倾听开始。',
+    ctaLabel:'Find the Listening Library', ctaUrl:'#/library',
+    image:'images/voices-future.jpg', isLibraryCta:true}
+}
+};
+
+const ROLES = ['past','present','future'];
+const WHO = {
+  1:{past:'Reveal your Past card.', present:'Now reveal your Present card.', future:'Last one: reveal your Future card.'},
+  2:{past:'Person A: reveal the Past card.', present:'Person B: reveal the Present card.', future:'Together: reveal the Future card.'},
+  3:{past:'Person A: reveal the Past card.', present:'Person B: reveal the Present card.', future:'Person C: reveal the Future card.'}
+};
+
+const S = { screen:'attract', people:1, interest:null, subpath:null, revealed:[], focus:null, readingId:null };
+const $app = document.getElementById('app');
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let idleT;
+
+function go(screen){ S.screen = screen; render(); window.scrollTo(0,0); }
+function reset(){ disableGesture(true); Object.assign(S,{screen:'attract',interest:null,subpath:null,revealed:[],focus:null,readingId:null,people:1}); history.replaceState(null,'',location.pathname+location.search); render(); }
+function bump(){ clearTimeout(idleT); if(S.screen!=='attract') idleT=setTimeout(reset,180000); }
+document.addEventListener('pointerdown',bump); document.addEventListener('keydown',bump);
+
+/* ---------- Icons ---------- */
+const ICON_MUSIC_ON  = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 18V6l10-2v12"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="16" r="2"/></svg>';
+const ICON_MUSIC_OFF = '<svg viewBox="0 0 24 24" fill="currentColor" opacity=".55"><path d="M9 18V6l10-2v12"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="16" r="2"/><line x1="3" y1="3" x2="21" y2="21" stroke="currentColor" stroke-width="2.5" opacity="1"/></svg>';
+const ICON_HAND_ON   = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 11V5a2 2 0 1 1 4 0v6M14 11V3a2 2 0 1 1 4 0v8M10 11V7a2 2 0 1 0-4 0v8c0 3 2 6 6 6s6-3 6-6v-4a2 2 0 0 0-4 0"/></svg>';
+const ICON_HAND_OFF  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity=".5"><path d="M10 11V5a2 2 0 1 1 4 0v6M14 11V3a2 2 0 1 1 4 0v8M10 11V7a2 2 0 1 0-4 0v8c0 3 2 6 6 6s6-3 6-6v-4a2 2 0 0 0-4 0"/><line x1="3" y1="3" x2="21" y2="21" stroke="currentColor" opacity="1"/></svg>';
+
+function audioState(){ return (typeof audio!=='undefined' && audio) ? audio : {on:false}; }
+function gestState(){ return (typeof gest!=='undefined' && gest) ? gest : {on:false,loading:false}; }
+
+/* ---------- Top bar ---------- */
+function topBar(showBack){
+  const showHand = S.screen==='draw' || S.screen==='interest' || S.screen==='subpath';
+  return `<div class="top">
+    <span class="brand">Lucky Fortune Wall</span>
+    <span class="topR">
+      <button class="iconBtn" data-act="mute" data-on="${audioState().on}" aria-label="music">${audioState().on?ICON_MUSIC_ON:ICON_MUSIC_OFF}</button>
+      ${showHand?`<button class="iconBtn" data-act="gest" data-on="${gestState().on}" ${gestState().loading?'disabled':''} aria-label="hand gestures">${gestState().on?ICON_HAND_ON:ICON_HAND_OFF}</button>`:''}
+      ${showBack?`<button class="ghost" data-act="back">Back</button>`:''}
+      ${S.screen!=='attract'?`<button class="ghost" data-act="restart">Restart</button>`:''}
+    </span></div>`;
+}
+
+/* ---------- Render ---------- */
+function render(){
+  bump();
+  if(S.screen==='attract'){
+    $app.innerHTML = `${topBar()}
+      <main>
+        <div class="hero">
+          <div class="tag">An outdoor interactive installation · Newtown, Sydney</div>
+          <h1>What does Newtown have for you today?</h1>
+          <p>Draw three cards. Discover a new side of Newtown.</p>
+        </div>
+        <div class="heroCards" aria-hidden="true">
+          <div class="passby"></div>
+          <div class="passby p2"></div>
+          <div class="hc hc1"><div class="ac"></div></div>
+          <div class="hc hc2"><div class="ac"></div></div>
+          <div class="hc hc3"><div class="ac"></div></div>
+        </div>
+        <button class="cta" data-act="start">Begin</button>
+      </main>`;
+    return;
+  }
+  if(S.screen==='interest'){
+    $app.innerHTML = `${topBar(true)}
+      <main>
+        <div class="sectionSub">Choose your interest</div>
+        <h2 class="sectionTitle">What are you curious about?</h2>
+        <div class="chips">
+          ${INTERESTS.map(i=>`<button class="chip" data-int="${i.id}" aria-pressed="${S.interest===i.id}">
+            <div class="name">${esc(i.label)}</div><div class="tag">${esc(i.theme)}</div>
+          </button>`).join('')}
+        </div>
+        <div style="margin-top:6px">
+          <div style="color:var(--mute);font-size:12px;letter-spacing:.2em;text-transform:uppercase;margin-bottom:10px">Who is drawing?</div>
+          <div class="seg" role="group">
+            ${[1,2,3].map(n=>`<button data-ppl="${n}" aria-pressed="${S.people===n}">${n===1?'Just me':n+' people'}</button>`).join('')}
+          </div>
+        </div>
+        <button class="cta" data-act="toNextFromInterest" ${S.interest?'':'disabled'}>Continue</button>
+      </main>`;
+    return;
+  }
+  if(S.screen==='subpath'){
+    $app.innerHTML = `${topBar(true)}
+      <main>
+        <div class="sectionSub">Hidden Places · choose your path</div>
+        <h2 class="sectionTitle">Two ways to leave the busy street.</h2>
+        <div class="pathChoice">
+          <button class="pathCard" data-sub="quiet">
+            <div class="glyph">❋</div>
+            <div><h3>Quiet Corners</h3>
+            <p>Historic parks, overlooked green spaces, and a slower rhythm of Newtown — away from the noise of King Street.</p></div>
+            <div class="goBtn">Follow this path →</div>
+          </button>
+          <button class="pathCard" data-sub="mystical">
+            <div class="glyph">☾</div>
+            <div><h3>Mystical Newtown</h3>
+            <p>Tarot windows, crystals and curious symbols that quietly line King Street. A self-guided walk for the curious eye.</p></div>
+            <div class="goBtn">Follow this path →</div>
+          </button>
+        </div>
+      </main>`;
+    return;
+  }
+  const rd = READINGS[S.readingId];
+  if(!rd){ reset(); return; }
+  if(S.screen==='draw'){
+    const n = S.revealed.length;
+    const nextRole = ROLES[n] || 'future';
+    const prompt = n<3 ? WHO[S.people][nextRole] : 'The reading is complete.';
+    const hint = n<3 ? (gestState().on ? 'Draw a circle in the air to spin · Make a fist to pick.' : 'Drag the ring to spin. Tap the front card to choose it.') : '';
+    $app.innerHTML = `${topBar(true)}
+      <main style="gap:14px">
+        <div class="prompt" aria-live="polite">${esc(prompt)}<span class="cnt">${n} / 3</span></div>
+        <div class="ring" id="ring">
+          <div class="ring-badge">The Fate Ring <b>${n}/3</b></div>
+          <div class="ring-perspective"><div class="ring-inner" id="ringInner"></div></div>
+        </div>
+        <div class="hint">${esc(hint)}</div>
+        <div class="slots" id="slots">${ROLES.map(r=>slotHTML(r,rd)).join('')}</div>
+        ${n===3?`<button class="cta" data-act="toResult">See your reading</button>`:''}
+      </main>`;
+    initRing();
+    return;
+  }
+  if(S.screen==='result'){
+    $app.innerHTML = `${topBar(true)}
+      <main style="gap:18px">
+        <div class="sectionSub">Your Newtown reading</div>
+        <h2 class="sectionTitle">${esc(getInterestLabel(rd))}</h2>
+        <div class="grid3">${ROLES.map(r=>cardPanel(r,rd,true)).join('')}</div>
+        <div class="fortune">${esc(rd.final.en)}<span class="zh">${esc(rd.final.zh)}</span></div>
+        <div class="linkRow" style="justify-content:center">
+          <button class="cta" data-act="toExplore">Explore more</button>
+          <button class="btn" data-act="copy">Copy result link</button>
+          <button class="btn" data-act="restart">Try again</button>
+        </div>
+        <div id="note" aria-live="polite"></div>
+      </main>`;
+    return;
+  }
+  if(S.screen==='explore'){
+    $app.innerHTML = `${topBar(true)}
+      <main style="gap:18px">
+        <div class="sectionSub">Where to next?</div>
+        <h2 class="sectionTitle">${S.people>1?'Which will you explore first — together?':'Pick one thing to explore this week.'}</h2>
+        ${cardPanel('present',rd,true)}
+        ${cardPanel('future',rd,true)}
+        <div class="linkRow" style="justify-content:center">
+          <button class="btn" data-act="copy">Copy result link</button>
+          <button class="cta" data-act="restart">Start over</button>
+        </div>
+        <div id="note" aria-live="polite"></div>
+      </main>`;
+    return;
+  }
+  if(S.screen==='library'){
+    $app.innerHTML = `${topBar(true)}
+      <main style="gap:18px">
+        <div class="libHeader">
+          <span class="libBadge">Proposed Indoor Installation · Group Prototype</span>
+          <h2 class="sectionTitle">Borrow a Newtown Voice</h2>
+          <p style="color:var(--mute);max-width:620px;margin:12px auto 0;font-size:15px">
+            Your next discovery isn't a place — it's a person. Visit the proposed Listening Library experience at Newtown Library on Brown Street. Borrow a resident's story, listen, and leave a little echo of your own.
+          </p>
+        </div>
+        <img class="libMap" src="images/newtown-map.jpg" alt="Map of Newtown showing Lucky Fortune Wall, Pride Square, Newtown Station, Camperdown Memorial Rest Park and Newtown Library">
+        <div class="panel" style="max-width:720px">
+          <div class="role">The Venue</div>
+          <h2 style="font-size:28px">Newtown Library</h2>
+          <p>8–10 Brown Street, Newtown NSW 2042</p>
+          <p class="zh">地址及开放时间以 Inner West Council 官方信息为准。</p>
+          <div class="linkRow">
+            <a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=Newtown+Library+Brown+Street+Newtown" target="_blank" rel="noopener">View Directions ↗</a>
+            <span class="btn off" aria-disabled="true">Learn more (link pending)</span>
+          </div>
+        </div>
+        <div class="panel" style="max-width:720px">
+          <div class="role">Inside the Installation</div>
+          <div class="libStep"><div class="n">1</div><div><div class="t">Borrow</div><div class="d">Choose a local resident's storybook from the shelf.</div></div></div>
+          <div class="libStep"><div class="n">2</div><div><div class="t">Listen</div><div class="d">Hear their voice through the headphones.</div></div></div>
+          <div class="libStep"><div class="n">3</div><div><div class="t">Respond</div><div class="d">Record a 15-second echo, or join a Listening Table conversation.</div></div></div>
+          <div class="libStep"><div class="n">4</div><div><div class="t">Connect</div><div class="d">Pin your place on the Connection Map; link stories with light-green thread, conversations with multicoloured thread.</div></div></div>
+          <p class="zh" style="margin-top:14px;color:var(--mute);font-size:13px">该室内装置为团队提案 (proposed group installation)，并非 Newtown Library 当前已开放的服务。</p>
+        </div>
+        <div class="linkRow" style="justify-content:center">
+          <button class="btn" data-act="back">Back to your reading</button>
+          <button class="cta" data-act="restart">Start over</button>
+        </div>
+      </main>`;
+    return;
+  }
+}
+
+function getInterestLabel(rd){
+  const i = INTERESTS.find(x=>x.id===rd.interest);
+  if(!i) return '';
+  if(rd.subpath==='mystical') return 'Mystical Newtown';
+  if(rd.subpath==='quiet') return i.theme;
+  return i.theme;
+}
+
+function slotHTML(role,rd){
+  const filled = S.revealed.includes(role);
+  const img = rd[role] && rd[role].image;
+  return `<div class="sl ${filled?'on':''}" data-slot="${role}">${filled?`<img src="${esc(img)}" alt="">`:esc(role)}</div>`;
+}
+function updateSlots(){
+  const rd = READINGS[S.readingId];
+  const c = document.getElementById('slots'); if(!c) return;
+  c.innerHTML = ROLES.map(r=>slotHTML(r,rd)).join('');
+  requestAnimationFrame(()=>{ c.querySelectorAll('.sl.on').forEach(el=>el.classList.add('flipped')); });
+}
+function updatePromptAndCta(){
+  const n = S.revealed.length;
+  const p = document.querySelector('.prompt');
+  if(p){
+    const nextRole = ROLES[n]||'future';
+    const txt = n<3 ? WHO[S.people][nextRole] : 'The reading is complete.';
+    p.innerHTML = esc(txt) + '<span class="cnt">'+n+' / 3</span>';
+  }
+  if(n===3 && !document.querySelector('[data-act="toResult"]')){
+    const main = document.querySelector('main');
+    if(main){
+      const b = document.createElement('button');
+      b.className='cta'; b.dataset.act='toResult'; b.textContent='See your reading';
+      main.appendChild(b);
+    }
+  }
+}
+
+function cardPanel(role,rd,showImage){
+  const c = rd[role];
+  let facts = '', acts = '', flyer = '';
+  if(role==='present' && c.place){
+    facts = `<div class="meta">${esc(c.place)}</div>`;
+    acts = c.mapUrl ? `<a class="btn" href="${esc(c.mapUrl)}" target="_blank" rel="noopener">View on map ↗</a>` : '';
+  }
+  if(role==='future'){
+    const label = c.ctaLabel || 'Learn more';
+    if(c.isLibraryCta){
+      acts = `<button class="btn" data-act="toLibrary">${esc(label)} →</button>`;
+    } else if(c.ctaUrl){
+      acts = `<a class="btn" href="${esc(c.ctaUrl)}" target="_blank" rel="noopener">${esc(label)} ↗</a>`;
+    } else {
+      acts = `<span class="btn off">${esc(label)} (link pending)</span>`;
+    }
+    if(c.flyer) flyer = `<img class="flyer" src="${esc(c.flyer)}" alt="${esc(c.title)} flyer">`;
+  }
+  return `<div class="panel">
+    <div class="role">${esc(c.role)}</div>
+    <h2>${esc(c.title)}</h2>
+    <div class="poem">${esc(c.poem)}</div>
+    <p>${esc(c.en)}</p>
+    <p class="zh">${esc(c.zh)}</p>
+    ${facts}${flyer}
+    <div class="linkRow">${acts}</div>
+  </div>`;
+}
+
+/* ---------- Click handling ---------- */
+$app.addEventListener('click', e=>{
+  const t = e.target.closest('button,[data-act]'); if(!t) return;
+  const a = t.dataset.act;
+  if(a==='start'){ initParticles(); startMusic(); if(!gest.on && !gest.loading) toggleGesture(); go('interest'); }
+  else if(a==='restart'){ reset(); }
+  else if(a==='back'){
+    if(S.screen==='draw'){ const i=INTERESTS.find(x=>x.id===S.interest); go(i && i.hasSubpath ? 'subpath' : 'interest'); }
+    else if(S.screen==='subpath'){ go('interest'); }
+    else if(S.screen==='result'){ go('draw'); }
+    else if(S.screen==='explore'){ go('result'); }
+    else if(S.screen==='library'){ go('explore'); }
+    else { go('attract'); }
+  }
+  else if(t.dataset.int){ S.interest = t.dataset.int; render(); }
+  else if(t.dataset.ppl){ S.people = +t.dataset.ppl; render(); }
+  else if(t.dataset.sub){
+    const i = INTERESTS.find(x=>x.id===S.interest);
+    S.subpath = t.dataset.sub;
+    S.readingId = t.dataset.sub==='mystical' ? i.mysticalReading : i.defaultReading;
+    S.revealed = []; S.focus = null;
+    go('draw');
+  }
+  else if(a==='toNextFromInterest'){
+    const i = INTERESTS.find(x=>x.id===S.interest); if(!i) return;
+    if(i.hasSubpath){ go('subpath'); }
+    else { S.readingId = i.reading; S.revealed = []; S.focus = null; go('draw'); }
+  }
+  else if(a==='toResult'){ history.replaceState(null,'','#/result/'+S.readingId); go('result'); }
+  else if(a==='toExplore'){ history.replaceState(null,'','#/explore/'+S.readingId); go('explore'); }
+  else if(a==='toLibrary'){ go('library'); }
+  else if(a==='gest'){ toggleGesture(); }
+  else if(a==='mute'){ toggleMusic(); }
+  else if(a==='copy'){
+    const url = location.origin + location.pathname + '#/result/' + S.readingId;
+    const n = document.getElementById('note');
+    const show = ok => { if(n) n.textContent = ok ? 'Link copied — share this reading with anyone.' : ('Copy this link: ' + url); };
+    (navigator.clipboard ? navigator.clipboard.writeText(url).then(()=>show(true)) : Promise.reject()).catch(()=>show(false));
+  }
+});
+
+/* ---------- Hash routing ---------- */
+function fromHash(){
+  const m = location.hash.match(/^#\/(result|explore|library)\/?([\w-]+)?/);
+  if(!m) return;
+  if(m[1]==='library'){ S.screen='library'; return; }
+  if(m[2] && READINGS[m[2]]){
+    const rd = READINGS[m[2]];
+    S.readingId = m[2]; S.interest = rd.interest; S.subpath = rd.subpath || null;
+    S.revealed = [...ROLES]; S.screen = m[1];
+  }
+}
+
+/* ============================================================
+   3D Fate Ring (full 360°)
+   ============================================================ */
+const RING = { N:15, rot:0, drawn:new Set(), locking:false, dragLast:null };
+function cardAngle(i){ return i * (360 / RING.N); }
+function focusIndex(){
+  let best=-1,bestD=999;
+  for(let i=0;i<RING.N;i++){
+    if(RING.drawn.has(i)) continue;
+    let a = (cardAngle(i) + RING.rot) % 360;
+    if(a>180) a-=360; if(a<-180) a+=360;
+    const d = Math.abs(a); if(d<bestD){ bestD=d; best=i; }
+  }
+  return best;
+}
+function buildRing(){
+  const inner = document.getElementById('ringInner'); if(!inner) return;
+  let html = '';
+  for(let i=0;i<RING.N;i++) html += `<div class="rc" data-ring="${i}" style="--card-ang:${cardAngle(i)}deg"><div class="face"></div></div>`;
+  inner.innerHTML = html;
+  updateRing();
+}
+function updateRing(){
+  const inner = document.getElementById('ringInner'); if(!inner) return;
+  inner.style.setProperty('--ring-rot', RING.rot.toFixed(2)+'deg');
+  const f = focusIndex();
+  for(let i=0;i<RING.N;i++){
+    const el = inner.children[i]; if(!el) continue;
+    el.classList.toggle('focus', i===f);
+    el.classList.toggle('drawn', RING.drawn.has(i));
+  }
+  const b = document.querySelector('.ring-badge b');
+  if(b) b.textContent = S.revealed.length + '/3';
+}
+function rotateRing(deg){ if(RING.locking) return; RING.rot = (RING.rot + deg) % 360; updateRing(); }
+function initRing(){
+  RING.drawn = new Set(); RING.rot = 0; RING.locking = false;
+  buildRing(); updateSlots();
+  const ring = document.getElementById('ring'); if(!ring) return;
+  ring.addEventListener('pointerdown', e=>{ RING.dragLast={x:e.clientX,y:e.clientY}; ring.setPointerCapture(e.pointerId); });
+  ring.addEventListener('pointermove', e=>{
+    if(!RING.dragLast) return;
+    const dx = e.clientX - RING.dragLast.x;
+    RING.dragLast = {x:e.clientX,y:e.clientY};
+    rotateRing(dx*0.4);
+  });
+  const endDrag = ()=>{ RING.dragLast=null; };
+  ring.addEventListener('pointerup', endDrag);
+  ring.addEventListener('pointercancel', endDrag);
+  ring.addEventListener('click', e=>{
+    const el = e.target.closest('.rc'); if(!el || el.classList.contains('drawn')) return;
+    const i = +el.dataset.ring;
+    if(i===focusIndex()) drawFocusCard();
+    else { RING.rot = -cardAngle(i); updateRing(); }
+  });
+}
+function drawFocusCard(){
+  if(RING.locking) return;
+  const i = focusIndex(); if(i<0) return;
+  const role = ROLES[S.revealed.length]; if(!role) return;
+  RING.locking = true;
+  const ring = document.getElementById('ring');
+  if(ring){
+    const r = ring.getBoundingClientRect();
+    particleBurst(r.left + r.width/2, r.top + r.height*0.5, 70);
+  }
+  RING.drawn.add(i);
+  S.revealed.push(role); S.focus = role;
+  updateRing(); updateSlots(); updatePromptAndCta();
+  setTimeout(()=>{ RING.locking = false; }, 900);
+}
+
+/* ============================================================
+   Gesture: MediaPipe HandLandmarker + circle detection
+   ============================================================ */
+const gest = { on:false, loading:false, stream:null, lm:null, raf:0, lastTs:0 };
+function setStat(msg, sticky){
+  const el = document.getElementById('geststat'); if(!el) return;
+  clearTimeout(gest.statT);
+  if(msg){ el.textContent = msg; el.classList.add('on'); if(!sticky) gest.statT = setTimeout(()=>el.classList.remove('on'), 5000); }
+  else el.classList.remove('on');
+}
+async function toggleGesture(){
+  if(gest.loading) return;
+  if(gest.on){ disableGesture(); return; }
+  gest.loading = true; render(); setStat('Loading hand model… first time takes a few seconds.', true);
+  try {
+    if(!gest.lm){
+      const mod = await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/+esm');
+      const fs = await mod.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm');
+      gest.lm = await mod.HandLandmarker.createFromOptions(fs, {
+        baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task' },
+        numHands:1, runningMode:'VIDEO'
+      });
+    }
+    setStat('Requesting camera…', true);
+    gest.stream = await navigator.mediaDevices.getUserMedia({ video:{width:640,height:480,facingMode:'user'}, audio:false });
+    const v = document.getElementById('gestvid');
+    v.srcObject = gest.stream; await v.play(); v.classList.add('on');
+    gest.on = true; gest.loading = false;
+    setStat('Draw a circle in the air to spin the ring. Make a fist to pick the front card.');
+    render(); runGestLoop();
+  } catch(e){
+    gest.loading = false;
+    const msg = (e && e.name==='NotAllowedError') ? 'Camera access denied. Use touch instead.' : ('Camera unavailable: '+(e&&e.message||'error')+'. Use touch instead.');
+    setStat(msg); render();
+  }
+}
+function disableGesture(silent){
+  const was = gest.on; gest.on = false;
+  cancelAnimationFrame(gest.raf);
+  if(gest.stream){ gest.stream.getTracks().forEach(t=>t.stop()); gest.stream = null; }
+  const v = document.getElementById('gestvid'); if(v){ v.srcObject=null; v.classList.remove('on'); }
+  const c = document.getElementById('gestcur'); if(c) c.classList.remove('on');
+  circleG.pts.length = 0; fistReset();
+  if(was && !silent) setStat('Camera off.');
+  render();
+}
+function runGestLoop(){
+  if(!gest.on) return;
+  const v = document.getElementById('gestvid');
+  if(v && v.readyState>=2 && gest.lm){
+    const ts = performance.now();
+    if(ts - gest.lastTs > 50){ gest.lastTs = ts;
+      try {
+        const res = gest.lm.detectForVideo(v, ts);
+        if(res && res.landmarks && res.landmarks[0]){
+          const lm = res.landmarks[0];
+          const tip = lm[8];
+          // Cursor position: index finger tip when open, middle MCP when closed (stable centre)
+          const fist = isFist(lm);
+          const anchor = fist ? lm[9] : tip;
+          const x = (1-anchor.x) * window.innerWidth;
+          const y = anchor.y * window.innerHeight;
+          showCursor(x, y, fist);
+          // Fist works on any screen (draw → pick card; others → click button)
+          if(S.screen !== 'attract') fistStep(fist, x, y);
+          else fistReset();
+          // Circle only matters on draw screen, and only when hand is open
+          if(S.screen==='draw' && !fist) circleStep(x, y);
+          else circleG.pts.length = 0;
+        } else {
+          hideCursor(); circleG.pts.length = 0; fistReset();
+        }
+      } catch(e){}
+    }
+  }
+  gest.raf = requestAnimationFrame(runGestLoop);
+}
+function showCursor(x,y,fist){
+  const c = document.getElementById('gestcur'); if(!c) return;
+  c.classList.add('on'); c.style.left=x+'px'; c.style.top=y+'px';
+  c.style.borderColor = fist ? 'var(--coral)' : 'var(--gold)';
+  c.style.background = fist ? 'rgba(244,168,150,.5)' : 'rgba(209,185,140,.35)';
+  if(S.screen==='draw' && !fist && Math.random()<0.35) particleSpawn(x,y,1,'trail');
+  // Aim highlight for non-draw screens (interest, subpath, result, explore, library)
+  if(S.screen !== 'draw' && S.screen !== 'attract'){
+    const el = document.elementFromPoint(x, y);
+    const btn = (el && el.closest) ? el.closest('button,a.btn') : null;
+    const prev = document.querySelector('.gest-aim');
+    const next = (btn && !btn.disabled && btn !== prev) ? btn : null;
+    if(prev && prev !== btn) prev.classList.remove('gest-aim');
+    if(btn && !btn.disabled) btn.classList.add('gest-aim');
+  } else {
+    const prev = document.querySelector('.gest-aim'); if(prev) prev.classList.remove('gest-aim');
+  }
+}
+function hideCursor(){
+  const c = document.getElementById('gestcur'); if(c) c.classList.remove('on');
+  const prev = document.querySelector('.gest-aim'); if(prev) prev.classList.remove('gest-aim');
+}
+
+/* Fist detection:
+   Compare each curled fingertip's distance to the wrist against hand size
+   (wrist→index-MCP). Open fingers extend 1.9+ hand-sizes from wrist;
+   curled fingers sit ≤1.5 hand-sizes. At least 3 of 4 curled = fist. */
+function isFist(lm){
+  const w = lm[0], iMCP = lm[5];
+  const handSize = Math.hypot(w.x - iMCP.x, w.y - iMCP.y);
+  if(handSize < 0.01) return false;
+  const tips = [8, 12, 16, 20];
+  let curled = 0;
+  for(const t of tips){
+    const d = Math.hypot(lm[t].x - w.x, lm[t].y - w.y);
+    if(d / handSize < 1.6) curled++;
+  }
+  return curled >= 3;
+}
+
+/* Fist gesture → pick focus card. 300ms hold prevents accidental trigger.
+   Once triggered, require open hand before next fist is accepted. */
+const fist = { startT:0, armed:true, lastX:0, lastY:0 };
+const FIST_HOLD_MS = 300;
+function fistStep(isF, x, y){
+  const now = performance.now();
+  const ring = document.getElementById('fistRing');
+  fist.lastX = x; fist.lastY = y;
+  if(isF){
+    if(!fist.startT) fist.startT = now;
+    const p = Math.min(1, (now - fist.startT) / FIST_HOLD_MS);
+    if(ring){
+      ring.classList.add('on');
+      ring.style.left = x+'px'; ring.style.top = y+'px';
+      ring.style.setProperty('--fp', p);
+    }
+    // show "fist" state on the focus card
+    const inner = document.getElementById('ringInner');
+    if(inner){
+      const f = focusIndex();
+      for(let i=0;i<RING.N;i++){
+        const el = inner.children[i]; if(!el) continue;
+        el.classList.toggle('fist', i === f);
+      }
+    }
+    if(p >= 1 && fist.armed && !RING.locking){
+      fist.armed = false;
+      if(ring) ring.classList.remove('on');
+      particleBurst(x, y, 50);
+      if(S.screen === 'draw'){
+        drawFocusCard();
+      } else {
+        // Click whatever button is under the cursor
+        const el = document.elementFromPoint(x, y);
+        const btn = (el && el.closest) ? el.closest('button,a.btn') : null;
+        if(btn && !btn.disabled) btn.click();
+      }
+    }
+  } else {
+    // Hand opened → reset and re-arm for next pick
+    fist.startT = 0;
+    fist.armed = true;
+    if(ring){ ring.classList.remove('on'); ring.style.setProperty('--fp', 0); }
+    const inner = document.getElementById('ringInner');
+    if(inner) for(let i=0;i<RING.N;i++){ const el = inner.children[i]; if(el) el.classList.remove('fist'); }
+  }
+}
+function fistReset(){
+  fist.startT = 0; fist.armed = true;
+  const ring = document.getElementById('fistRing');
+  if(ring){ ring.classList.remove('on'); ring.style.setProperty('--fp', 0); }
+  const inner = document.getElementById('ringInner');
+  if(inner) for(let i=0;i<RING.N;i++){ const el = inner.children[i]; if(el) el.classList.remove('fist'); }
+}
+
+/* Circle gesture — spin the ring (only runs when hand is open) */
+const circleG = { pts:[] };
+function circleStep(x,y){
+  const now = performance.now();
+  circleG.pts.push({x,y,t:now});
+  while(circleG.pts.length && now - circleG.pts[0].t > 450) circleG.pts.shift();
+  if(circleG.pts.length < 3) return;
+  const n = circleG.pts.length;
+  const p1 = circleG.pts[n-2], p2 = circleG.pts[n-1];
+  const dist = Math.hypot(p2.x-p1.x, p2.y-p1.y);
+  if(dist < 2.5) return;
+  let cx=0, cy=0; for(const p of circleG.pts){ cx+=p.x; cy+=p.y; } cx/=n; cy/=n;
+  const r2 = (p2.x-cx)**2 + (p2.y-cy)**2;
+  if(r2 < 625) return;  // 25px min radius
+  const a1 = Math.atan2(p1.y-cy, p1.x-cx);
+  const a2 = Math.atan2(p2.y-cy, p2.x-cx);
+  let dA = a2 - a1;
+  if(dA > Math.PI) dA -= 2*Math.PI;
+  if(dA < -Math.PI) dA += 2*Math.PI;
+  rotateRing(-(dA*180/Math.PI)*1.4);
+}
+
+/* ============================================================
+   Gold-dust particles
+   ============================================================ */
+const PCANV = { ctx:null, parts:[], raf:0, w:0, h:0 };
+function initParticles(){
+  const c = document.getElementById('particles'); if(!c) return;
+  const dpr = Math.min(window.devicePixelRatio||1, 2);
+  const resize = ()=>{
+    PCANV.w = window.innerWidth; PCANV.h = window.innerHeight;
+    c.width = PCANV.w*dpr; c.height = PCANV.h*dpr;
+    c.style.width = PCANV.w+'px'; c.style.height = PCANV.h+'px';
+    PCANV.ctx = c.getContext('2d'); PCANV.ctx.scale(dpr,dpr);
+  };
+  resize(); window.addEventListener('resize', resize);
+  if(!PCANV.raf) renderParticles();
+}
+function particleSpawn(x,y,n,type){
+  for(let i=0;i<n;i++){
+    const a = Math.random()*Math.PI*2;
+    const sp = type==='trail' ? Math.random()*0.6 : Math.random()*4+1;
+    PCANV.parts.push({
+      x:x+(Math.random()-0.5)*6, y:y+(Math.random()-0.5)*6,
+      vx:Math.cos(a)*sp, vy:Math.sin(a)*sp - (type==='trail'?0.2:0.6),
+      life:1, decay:type==='trail'?0.025:0.012,
+      size:1+Math.random()*(type==='trail'?1.6:3),
+      color:Math.random()<0.88?'#D1B98C':(Math.random()<0.5?'#9ED5CE':'#F0B9B2'),
+    });
+  }
+  if(PCANV.parts.length>500) PCANV.parts.splice(0, PCANV.parts.length-500);
+}
+function particleBurst(x,y,n){
+  for(let i=0;i<n;i++){
+    const a = Math.random()*Math.PI*2;
+    const sp = Math.random()*8+2;
+    PCANV.parts.push({
+      x,y, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp-3,
+      life:1, decay:0.011, size:1+Math.random()*3.5,
+      color:Math.random()<0.85?'#D1B98C':(Math.random()<0.5?'#F0B9B2':'#9ED5CE'),
+    });
+  }
+}
+function renderParticles(){
+  const ctx = PCANV.ctx;
+  if(!ctx){ PCANV.raf = requestAnimationFrame(renderParticles); return; }
+  ctx.clearRect(0,0,PCANV.w,PCANV.h);
+  for(let i=PCANV.parts.length-1;i>=0;i--){
+    const p = PCANV.parts[i];
+    p.x+=p.vx; p.y+=p.vy; p.vy+=0.08; p.vx*=0.99; p.life-=p.decay;
+    if(p.life<=0){ PCANV.parts.splice(i,1); continue; }
+    ctx.globalAlpha = Math.max(0,p.life);
+    ctx.fillStyle = p.color; ctx.shadowColor = p.color; ctx.shadowBlur = 10;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill();
+  }
+  ctx.globalAlpha=1; ctx.shadowBlur=0;
+  PCANV.raf = requestAnimationFrame(renderParticles);
+}
+
+/* ============================================================
+   Background music: HTMLAudioElement loop with fade in/out
+   ============================================================ */
+const audio = { el:null, on:false, fadeI:null, targetVol:0.3 };
+function ensureAudio(){
+  if(audio.el) return audio.el;
+  const el = new Audio('audio/musicbox.mp3');
+  el.loop = true; el.preload = 'auto'; el.volume = 0;
+  el.addEventListener('error', ()=>{ setStat('Could not load music file.'); audio.on=false; try{render();}catch(e){} });
+  audio.el = el; return el;
+}
+function fadeTo(target, dur, done){
+  if(audio.fadeI){ clearInterval(audio.fadeI); audio.fadeI = null; }
+  if(!audio.el){ if(done) done(); return; }
+  const start = audio.el.volume, t0 = performance.now();
+  audio.fadeI = setInterval(()=>{
+    const t = Math.min(1,(performance.now()-t0)/dur);
+    try{ audio.el.volume = Math.max(0,Math.min(1, start+(target-start)*t)); }catch(e){}
+    if(t>=1){ clearInterval(audio.fadeI); audio.fadeI=null; if(done) done(); }
+  }, 40);
+}
+function startMusic(){
+  try {
+    const el = ensureAudio(); el.volume = 0;
+    const p = el.play();
+    if(p && p.catch) p.catch(e=>{ setStat('Audio blocked by the browser. Tap ♪ again.'); });
+    fadeTo(audio.targetVol, 1500);
+    audio.on = true; render();
+  } catch(e){ setStat('Audio failed to start.'); }
+}
+function stopMusic(){
+  audio.on = false;
+  if(!audio.el){ try{render();}catch(e){} return; }
+  fadeTo(0, 700, ()=>{ try{ audio.el.pause(); }catch(e){} });
+  try{render();}catch(e){}
+}
+function toggleMusic(){ if(audio.on) stopMusic(); else startMusic(); }
+
+/* ============================================================
+   Ambient background stars (very subtle, static)
+   ============================================================ */
+function buildStars(){
+  const g = document.getElementById('starG'); if(!g) return;
+  const svg = g.ownerSVGElement; svg.setAttribute('width',window.innerWidth); svg.setAttribute('height',window.innerHeight);
+  let s = '';
+  const N = 90;
+  for(let i=0;i<N;i++){
+    const x = Math.random()*window.innerWidth;
+    const y = Math.random()*window.innerHeight;
+    const r = Math.random()*1.1 + 0.3;
+    const o = Math.random()*0.55 + 0.1;
+    s += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(2)}" fill="#D1B98C" opacity="${o.toFixed(2)}"/>`;
+  }
+  g.innerHTML = s;
+}
+window.addEventListener('resize', buildStars);
+
+/* ---------- Clean-up on unload / tab hidden ---------- */
+window.addEventListener('beforeunload', ()=>{ disableGesture(true); stopMusic(); });
+document.addEventListener('visibilitychange', ()=>{ if(document.hidden && gest.on) disableGesture(true); });
+
+/* ---------- Error surface (so page never silently white-screens) ---------- */
+window.addEventListener('error', ev=>{
+  const el = document.getElementById('geststat'); if(!el) return;
+  el.textContent = 'JS error: '+(ev.message||'unknown')+' — '+(ev.filename||'')+':'+(ev.lineno||'');
+  el.classList.add('on');
+});
+
+/* ---------- Boot ---------- */
+try { buildStars(); } catch(e){}
+try { fromHash(); } catch(e){}
+try { initParticles(); } catch(e){}
+try { render(); } catch(e){
+  console.error(e);
+  document.getElementById('app').innerHTML = '<div style="padding:40px;max-width:600px;margin:40px auto;background:#1E1A2A;border:1px solid #D1B98C;border-radius:4px"><h2 style="font-family:Georgia,serif;color:#D1B98C;margin:0 0 12px">Something went wrong.</h2><p>'+String(e&&e.message||e)+'</p></div>';
+}
+</script>
+</body>
+</html>

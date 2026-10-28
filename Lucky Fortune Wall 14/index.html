@@ -1,0 +1,1698 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lucky Fortune Wall</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root{
+  --bg:#101018; --bg2:#1E1A2A; --ink:#F3EEE6; --mute:#95899F;
+  --gold:#D1B98C; --gold-dim:#8c7c5c;
+  --cream:#F6F0E3; --pink:#F0B9B2; --teal:#9ED5CE; --coral:#F4A896;
+}
+*{box-sizing:border-box}
+html{height:100%}
+body{margin:0;min-height:100%;background:radial-gradient(ellipse 1400px 900px at 50% -20%,#1E1A2A,#101018 70%);color:var(--ink);font-family:Inter,system-ui,sans-serif;font-size:17px;line-height:1.5;overflow-x:hidden}
+h1,h2,h3,.serif{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;margin:0;line-height:1.12;letter-spacing:.01em}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+img{display:block;max-width:100%}
+
+#app{max-width:1200px;margin:0 auto;padding:12px 20px 24px;min-height:100vh;display:flex;flex-direction:column;position:relative;z-index:2}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:44px;margin-bottom:4px}
+.brand{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;letter-spacing:.22em;color:var(--gold);text-transform:uppercase}
+.topR{display:flex;gap:8px;align-items:center}
+
+/* buttons */
+.iconBtn{background:transparent;border:1px solid rgba(209,185,140,.35);border-radius:50%;width:40px;height:40px;display:inline-grid;place-items:center;color:var(--mute);padding:0;transition:all .25s}
+.iconBtn:hover{border-color:var(--gold);color:var(--gold)}
+.iconBtn[data-on="true"]{border-color:var(--gold);color:var(--gold)}
+.iconBtn[data-on="true"] svg{filter:drop-shadow(0 0 8px rgba(209,185,140,.6))}
+.iconBtn svg{width:18px;height:18px}
+.ghost{background:transparent;border:1px solid rgba(209,185,140,.4);color:var(--mute);border-radius:999px;padding:8px 18px;font-weight:500;min-height:40px;font-size:14px;letter-spacing:.08em;text-transform:uppercase;transition:all .25s}
+.ghost:hover{color:var(--gold);border-color:var(--gold)}
+.cta{background:var(--gold);color:#1a1510;border:0;border-radius:999px;padding:16px 42px;font-weight:600;font-size:16px;letter-spacing:.18em;text-transform:uppercase;min-height:56px;transition:all .3s;position:relative;overflow:hidden}
+.cta::before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 40%,rgba(255,255,255,.3) 50%,transparent 60%);transform:translateX(-100%);transition:transform .7s}
+.cta:hover::before{transform:translateX(100%)}
+.cta:disabled{background:#3a3344;color:#6a6176;cursor:not-allowed}
+.cta:disabled::before{display:none}
+.cta.ghost-cta{background:transparent;color:var(--gold);border:1px solid var(--gold)}
+.cta.cta-photo{display:inline-flex;align-items:center;gap:12px;padding:14px 32px 14px 24px;font-size:15px}
+.cta.cta-photo img{width:36px;height:36px;display:block;filter:brightness(.15)}
+.cta.cta-photo::after{content:"";position:absolute;inset:-6px;border:1px solid rgba(209,185,140,.4);border-radius:999px;animation:camPulse 2.4s ease-in-out infinite;pointer-events:none}
+@keyframes camPulse{0%,100%{opacity:0;transform:scale(1)}50%{opacity:1;transform:scale(1.03)}}
+
+main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:18px;padding:8px 0;position:relative}
+
+/* ambient star field (very subtle) */
+.stars{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.5}
+
+/* attract */
+.hero{width:100%;text-align:center}
+.hero h1{display:inline-block;font-family:'Cormorant Garamond',serif;font-size:clamp(20px,2.8vw,34px);font-weight:400;margin:0 auto;font-style:italic;color:var(--cream);line-height:1.2;white-space:nowrap;max-width:none}
+@media(max-width:720px){.hero h1{white-space:normal;max-width:16ch}}
+.hero p{font-size:clamp(14px,1.6vw,17px);color:var(--mute);margin:10px 0 0;letter-spacing:.04em;font-style:normal;transition:opacity .5s;min-height:1.5em}
+.passiveHint{margin-top:14px;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--gold);font-size:14px;letter-spacing:.06em;opacity:.7;animation:pulseP 3.4s ease-in-out infinite}
+
+/* V26 Together Mode */
+.peoplePick{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:760px;width:100%;margin:8px 0}
+.peoplePick.peoplePick2{grid-template-columns:repeat(2,1fr);max-width:620px}
+@media(max-width:700px){.peoplePick,.peoplePick.peoplePick2{grid-template-columns:1fr;max-width:380px}}
+.peopleSub{display:inline-flex;gap:14px;margin:4px 0}
+.peopleSubBtn{background:transparent;border:1px solid rgba(209,185,140,.4);border-radius:999px;padding:10px 22px 10px 10px;color:var(--mute);display:inline-flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:all .25s;min-height:48px}
+.peopleSubBtn .n{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;background:rgba(209,185,140,.1);border:1px solid rgba(209,185,140,.5);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:22px;color:var(--gold);letter-spacing:0}
+.peopleSubBtn:hover{border-color:var(--gold);color:var(--cream)}
+.peopleSubBtn[aria-pressed="true"]{background:rgba(209,185,140,.14);border-color:var(--gold);color:var(--cream)}
+.peopleSubBtn[aria-pressed="true"] .n{background:var(--gold);color:#1a1510;box-shadow:0 0 14px rgba(209,185,140,.5)}
+.peopleBtn{background:rgba(243,238,230,.03);border:1px solid rgba(209,185,140,.3);border-radius:4px;padding:22px 18px;color:var(--ink);text-align:center;transition:all .25s;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;min-height:160px;justify-content:center}
+.peopleBtn:hover{background:rgba(243,238,230,.07);border-color:var(--gold);transform:translateY(-3px)}
+.peopleBtn[aria-pressed="true"]{background:rgba(209,185,140,.14);border-color:var(--gold);box-shadow:0 0 24px rgba(209,185,140,.3)}
+.peopleBtn .peopleN{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:56px;color:var(--gold);line-height:1;margin-bottom:4px}
+.peopleBtn .peopleLbl{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--cream)}
+.peopleBtn .peopleHint{font-size:11px;color:var(--mute);letter-spacing:.04em}
+
+.playerBadge{display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border:1px solid var(--gold);border-radius:999px;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);background:rgba(209,185,140,.08)}
+
+.handoverCard{background:rgba(243,238,230,.03);border:1px solid var(--gold);border-radius:4px;padding:48px 36px;max-width:620px;width:100%;text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px;box-shadow:0 0 40px rgba(209,185,140,.15)}
+.handoverStep{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+.handoverTitle{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(28px,4vw,42px);color:var(--cream);margin:0;line-height:1.15}
+.handoverSub{color:var(--mute);font-size:15px;line-height:1.6;max-width:460px;margin:0}
+.handoverDots{display:flex;gap:12px;margin-top:6px}
+.handoverDots .dot{width:14px;height:14px;border-radius:50%;border:1px solid var(--gold);background:transparent;transition:all .3s}
+.handoverDots .dot.done{background:var(--gold-dim);opacity:.45}
+.handoverDots .dot.now{background:var(--gold);box-shadow:0 0 14px rgba(209,185,140,.65);animation:pulseP 2s ease-in-out infinite}
+.handoverFinal{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--teal);font-size:15px;margin-top:4px}
+
+.constellation{display:flex;flex-direction:column;gap:22px;width:100%;max-width:1200px}
+.playerBlock{display:flex;flex-direction:column;gap:8px;padding:12px 0;border-top:1px solid rgba(209,185,140,.18)}
+.playerBlock:first-child{border-top:0;padding-top:0}
+.playerBlockHd{display:flex;justify-content:space-between;align-items:baseline;padding:0 4px}
+.playerBlockName{font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);font-weight:600}
+.playerBlockTheme{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--cream);font-size:18px}
+
+.sharedAdventure{background:rgba(209,185,140,.06);border:1px solid var(--gold);border-radius:4px;padding:22px 26px;max-width:1000px;width:100%;text-align:center;display:flex;flex-direction:column;gap:12px;margin-top:6px}
+.sharedFutures{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin:4px 0}
+.sharedFuture{text-align:center;padding:0 10px}
+.sfLbl{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:4px}
+.sfTitle{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--cream);font-size:22px;line-height:1.1;margin-bottom:4px}
+.sfPoem{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--teal);font-size:14px}
+
+/* V26: Installation-frame attract screen — looks like the physical kiosk */
+.attractMain{gap:14px;padding-top:4px}
+.installFrame{
+  position:relative;
+  width:min(440px,86vw);
+  aspect-ratio:600/1000;
+  margin:0 auto;
+  background:radial-gradient(ellipse at 50% 20%,#1b1430 0%,#0d0a18 70%);
+  border-radius:50% 50% 0 0 / 28% 28% 0 0;
+  box-shadow:0 30px 60px rgba(0,0,0,.6),inset 0 0 60px rgba(209,185,140,.08);
+  overflow:hidden;
+  cursor:pointer;
+  transition:transform .35s ease, box-shadow .35s ease;
+}
+.installFrame:hover,.installFrame:focus-visible{
+  transform:translateY(-3px);
+  box-shadow:0 36px 70px rgba(0,0,0,.65),inset 0 0 80px rgba(209,185,140,.14);
+  outline:none;
+}
+.installFrame .archSvg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.installInner{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  padding:14% 8% 6%;
+  text-align:center;
+}
+.installTitleBlock{display:flex;flex-direction:column;align-items:center;gap:8px}
+.installTitle{
+  font-family:'Cormorant Garamond',serif;
+  font-weight:600;font-style:normal;
+  font-size:clamp(18px,3.6vw,28px);
+  color:var(--gold);
+  letter-spacing:.12em;
+  line-height:1.05;
+  text-shadow:0 0 18px rgba(209,185,140,.4);
+  margin:0;
+}
+.installSub{
+  font-size:clamp(10px,1.4vw,12px);
+  letter-spacing:.32em;
+  color:var(--mute);
+  text-transform:uppercase;
+  min-height:1.2em;
+}
+.installFrame .heroCards{min-height:0;margin:0;gap:clamp(6px,1.4vw,14px)}
+.installFrame .heroCards .ac{width:min(90px,15vw);box-shadow:0 14px 36px rgba(0,0,0,.6)}
+.installHandBlock{display:flex;flex-direction:column;align-items:center;gap:6px}
+.installHand{width:34px;height:34px;color:var(--gold);animation:handTap 1.8s ease-in-out infinite;filter:drop-shadow(0 0 8px rgba(209,185,140,.5))}
+@keyframes handTap{
+  0%,100%{transform:translateY(0) scale(1)}
+  50%{transform:translateY(-3px) scale(1.06)}
+}
+.installInvite{
+  font-size:clamp(10px,1.3vw,12px);
+  letter-spacing:.28em;
+  color:var(--cream);
+  text-transform:uppercase;
+  animation:invitePulse 2.4s ease-in-out infinite;
+}
+@keyframes invitePulse{0%,100%{opacity:.75}50%{opacity:1}}
+.installFooter{
+  font-size:10px;letter-spacing:.5em;color:var(--gold);
+  text-transform:uppercase;margin-top:4px;opacity:.9;
+}
+@media(max-width:520px){
+  .installFrame{width:min(360px,90vw)}
+  .installInner{padding:16% 7% 6%}
+}
+@media(max-height:700px){
+  .installFrame{aspect-ratio:600/900}
+  .installInner{padding:12% 7% 5%}
+}
+@keyframes pulseP{50%{opacity:1}}
+.hero .tag{display:block;font-size:11px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:10px}
+.heroCards{display:flex;gap:clamp(16px,2.4vw,30px);justify-content:center;align-items:center;margin:10px 0 8px;perspective:1200px;position:relative;min-height:280px}
+.hc{display:inline-block;transform-origin:center bottom;position:relative}
+.hc1{transform:rotate(-10deg) translateY(10px)}
+.hc2{transform:rotate(0deg) translateY(-20px) scale(1.1);z-index:3}
+.hc3{transform:rotate(10deg) translateY(10px)}
+.heroCards .ac{width:min(170px,26vw);aspect-ratio:2/3;border-radius:10px;border:1px solid var(--gold);background:url('images/back.jpg') center/cover,#1a1540;box-shadow:0 20px 50px rgba(0,0,0,.65);position:relative;overflow:hidden;animation:bob 3.8s ease-in-out infinite}
+.hc1 .ac{animation-delay:.6s}
+.hc2 .ac{animation:bob2 4s ease-in-out infinite}
+.hc3 .ac{animation-delay:1.2s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes bob2{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+/* Shimmer light sweep */
+.heroCards .ac::before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 32%,rgba(243,238,230,.45) 50%,transparent 68%);transform:translateX(-130%) skewX(-20deg);animation:shimmer 5s ease-in-out infinite;pointer-events:none}
+.hc1 .ac::before{animation-delay:0s}
+.hc2 .ac::before{animation-delay:1.6s}
+.hc3 .ac::before{animation-delay:3.2s}
+@keyframes shimmer{0%,70%{transform:translateX(-130%) skewX(-20deg)}100%{transform:translateX(140%) skewX(-20deg)}}
+/* Pass-by ghost card drifting across behind the trio */
+.passby{position:absolute;top:50%;left:50%;width:min(130px,20vw);aspect-ratio:2/3;border-radius:9px;border:1px solid var(--gold);background:url('images/back.jpg') center/cover,#1a1540;transform:translate(-50%,-50%);opacity:0;animation:passby 9s ease-in-out infinite;z-index:0;filter:blur(.5px)}
+.passby.p2{animation-delay:4.5s;width:min(100px,16vw)}
+@keyframes passby{
+  0%{transform:translate(calc(-50% - 480px),-50%) rotate(-30deg) scale(.55);opacity:0}
+  10%{opacity:.42}
+  48%{transform:translate(calc(-50% - 10px),calc(-50% - 20px)) rotate(-4deg) scale(.78);opacity:.5}
+  55%{transform:translate(calc(-50% + 10px),calc(-50% - 20px)) rotate(4deg) scale(.78);opacity:.5}
+  90%{opacity:.3}
+  100%{transform:translate(calc(-50% + 480px),-50%) rotate(30deg) scale(.55);opacity:0}
+}
+
+/* interest page */
+.sectionTitle{font-size:clamp(28px,4vw,44px);font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:400;color:var(--cream);margin-bottom:4px}
+.sectionSub{color:var(--mute);font-size:14px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:12px}
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:860px;width:100%}
+@media(max-width:700px){.chips{grid-template-columns:repeat(2,1fr)}}
+.chip{background:rgba(243,238,230,.03);border:1px solid rgba(209,185,140,.25);border-radius:3px;padding:16px 16px;text-align:left;transition:all .3s;position:relative;min-height:84px;display:flex;flex-direction:column;justify-content:space-between;gap:6px}
+.chip:hover{background:rgba(243,238,230,.06);border-color:var(--gold);transform:translateY(-2px)}
+.chip[aria-pressed="true"]{background:rgba(209,185,140,.12);border-color:var(--gold)}
+.chip .name{font-family:'Cormorant Garamond',serif;font-size:22px;font-style:italic;color:var(--cream);line-height:1}
+.chip .tag{font-size:10px;color:var(--mute);letter-spacing:.2em;text-transform:uppercase}
+
+.seg{display:inline-flex;border:1px solid rgba(209,185,140,.35);border-radius:999px;overflow:hidden;background:rgba(0,0,0,.2)}
+.seg button{background:transparent;border:0;padding:12px 22px;min-height:44px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);transition:all .25s}
+.seg button[aria-pressed="true"]{background:var(--gold);color:#1a1510}
+
+/* Hidden Places subpath page */
+.pathChoice{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:720px;width:100%}
+@media(max-width:600px){.pathChoice{grid-template-columns:1fr}}
+.pathCard{position:relative;background:rgba(243,238,230,.03);border:1px solid rgba(209,185,140,.25);border-radius:3px;padding:24px 20px;text-align:left;transition:all .3s;min-height:200px;display:flex;flex-direction:column;justify-content:space-between;gap:12px;overflow:hidden;cursor:pointer}
+.pathCard:hover{background:rgba(243,238,230,.06);border-color:var(--gold);transform:translateY(-2px)}
+.pathCard .glyph{font-size:38px;color:var(--gold);line-height:1}
+.pathCard h3{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:30px;color:var(--cream)}
+.pathCard p{color:var(--mute);font-size:14px;line-height:1.6}
+.pathCard .goBtn{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+
+/* Ring draw page */
+.prompt{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(20px,2.3vw,26px);color:var(--cream);min-height:1.3em}
+.prompt .cnt{color:var(--mute);font-size:13px;font-style:normal;letter-spacing:.2em;margin-left:10px}
+.ring{position:relative;width:100%;height:340px;margin:0 auto;max-width:1100px;touch-action:none;user-select:none;-webkit-user-select:none;overflow:visible;background:radial-gradient(ellipse at 50% 55%,rgba(209,185,140,.1),transparent 65%)}
+.ring-perspective{position:absolute;inset:0;perspective:1300px;perspective-origin:50% 55%}
+.ring-inner{position:absolute;top:50%;left:50%;width:0;height:0;transform-style:preserve-3d;transform:translate3d(-50%,-50%,0) rotateX(14deg) rotateY(var(--ring-rot,0deg));transition:transform .3s ease-out;will-change:transform}
+.rc{position:absolute;top:0;left:0;width:100px;height:150px;margin:-75px 0 0 -50px;transform-style:preserve-3d;transform:rotateY(var(--card-ang,0deg)) translateZ(260px);backface-visibility:hidden;transition:opacity .5s,transform .7s cubic-bezier(.4,.1,.4,1)}
+.rc .face{width:100%;height:100%;border-radius:7px;border:1px solid var(--gold);background:url('images/back.jpg') center/cover,#1a1540;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.rc.focus .face{box-shadow:0 0 0 2px var(--gold),0 0 30px rgba(209,185,140,.55),0 8px 24px rgba(0,0,0,.5);animation:focusPulse 2.2s ease-in-out infinite}
+.rc.fist .face{box-shadow:0 0 0 3px var(--coral),0 0 44px rgba(244,168,150,.95),0 8px 24px rgba(0,0,0,.5);animation:none}
+.rc.confirmed .face{animation:cardFlash .6s ease-out}
+.rc.drawn{opacity:0;transform:rotateY(var(--card-ang,0deg)) translateZ(260px) translateY(340px) scale(.2)}
+@keyframes focusPulse{
+  0%,100%{box-shadow:0 0 0 2px var(--gold),0 0 28px rgba(209,185,140,.45),0 8px 24px rgba(0,0,0,.5)}
+  50%{box-shadow:0 0 0 2px var(--gold),0 0 44px rgba(209,185,140,.8),0 8px 24px rgba(0,0,0,.5)}
+}
+@keyframes cardFlash{
+  0%{box-shadow:0 0 0 4px #fff,0 0 60px rgba(255,255,255,.9),0 8px 24px rgba(0,0,0,.5);filter:brightness(1.4)}
+  100%{box-shadow:0 0 0 2px var(--gold),0 0 20px rgba(209,185,140,.4),0 8px 24px rgba(0,0,0,.5);filter:brightness(1)}
+}
+#fistRing{position:fixed;width:84px;height:84px;border-radius:50%;background:conic-gradient(var(--coral) calc(var(--fp,0)*360deg),rgba(255,255,255,.12) 0);display:none;place-items:center;pointer-events:none;z-index:58;transform:translate(-50%,-50%)}
+#fistRing::before{content:"HOLD";position:absolute;font-size:9px;letter-spacing:.22em;color:var(--coral);font-weight:700;z-index:2;text-shadow:0 1px 3px rgba(0,0,0,.9)}
+#fistRing::after{content:"";width:70px;height:70px;border-radius:50%;background:var(--bg)}
+#fistRing.on{display:grid}
+#fistRing.on::before{animation:holdPulse .5s ease-in-out infinite alternate}
+@keyframes holdPulse{from{opacity:.7}to{opacity:1}}
+/* Gesture-aimed button highlight (any screen) */
+.gest-aim{outline:2px solid var(--coral)!important;outline-offset:4px!important;box-shadow:0 0 24px rgba(244,168,150,.35)!important;transition:outline .15s,box-shadow .15s}
+.ring-badge{position:absolute;top:6px;left:50%;transform:translateX(-50%);color:var(--mute);padding:5px 16px;font-size:10px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;z-index:4;background:rgba(16,16,24,.6);border:1px solid rgba(209,185,140,.3);border-radius:999px}
+.ring-badge b{color:var(--gold);margin-left:8px;font-weight:600}
+.hint{color:var(--mute);font-size:13px;letter-spacing:.08em;min-height:1.4em}
+/* Gesture guide — two icons side by side explaining open-hand and fist */
+/* V25: gesture guide — now sits at the TOP of the draw page */
+.ggGuide{display:inline-flex;gap:22px;align-items:center;padding:10px 24px;border:1px solid rgba(209,185,140,.45);border-radius:999px;background:rgba(16,16,24,.7);margin-bottom:4px;position:relative;z-index:3}
+.ggGuide .ggLabel{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:13px;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;padding-right:4px;border-right:1px solid rgba(209,185,140,.3);margin-right:4px}
+.ggItem{display:inline-flex;gap:10px;align-items:center;color:var(--ink);font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
+.ggItem svg{width:28px;height:28px;color:var(--gold);display:block}
+.ggItem.pick svg{color:var(--coral)}
+.ggItem.pick{color:var(--cream)}
+.ggItem small{color:var(--mute);font-weight:400;font-size:11px;letter-spacing:.08em;text-transform:none;font-style:italic;margin-left:2px}
+.ggDivider{width:1px;height:28px;background:rgba(209,185,140,.3)}
+/* Fade-in pulse on first appearance */
+.ggGuide.intro{animation:ggIntro 2.4s ease-out}
+@keyframes ggIntro{0%{box-shadow:0 0 0 0 rgba(209,185,140,.6)}70%{box-shadow:0 0 0 18px rgba(209,185,140,0)}100%{box-shadow:0 0 0 0 rgba(209,185,140,0)}}
+/* Flyer page */
+.flyerPage{max-width:860px;width:100%;display:flex;flex-direction:column;gap:16px;align-items:center}
+.flyerPage .flyerBig{max-width:460px;width:100%;border-radius:6px;box-shadow:0 20px 50px rgba(0,0,0,.5);display:block}
+.flyerPage .flyerInfo{max-width:560px;text-align:center;color:#DEDAD1}
+.flyerPage h2{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(28px,4vw,42px);color:var(--cream);margin-bottom:8px}
+.flyerPage .src{color:var(--mute);font-size:12px;letter-spacing:.2em;text-transform:uppercase;margin-top:4px}
+.flyerPage .note{color:var(--mute);font-size:12px;margin-top:12px;max-width:460px;line-height:1.5}
+/* ===== Inline camera panel on Result page ===== */
+.capturePanel{display:flex;gap:18px;align-items:center;padding:14px 18px;background:rgba(243,238,230,.03);border:1px solid rgba(209,185,140,.3);border-radius:6px;max-width:720px;width:100%;position:relative}
+.capturePanel .camMini{position:relative;width:220px;flex-shrink:0;aspect-ratio:4/3;border-radius:6px;overflow:hidden;border:1px solid var(--gold);background:#000;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.capturePanel .camMini video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:block}
+.capturePanel .camMini .miniCd{position:absolute;inset:0;display:grid;place-items:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:68px;color:var(--gold);text-shadow:0 0 24px rgba(209,185,140,.9);pointer-events:none;font-weight:400}
+.capturePanel .camMini .miniCd.flash{background:rgba(255,255,255,.85);animation:flashFade .5s ease-out}
+.capturePanel .copy{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px}
+.capturePanel .copy .lbl{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold)}
+.capturePanel .copy h3{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:22px;color:var(--cream);margin:0}
+.capturePanel .copy .hint{color:var(--mute);font-size:13px;line-height:1.5}
+.capturePanel .copy .hint b{color:var(--gold);font-weight:600}
+.capturePanel .copy .cta{align-self:flex-start}
+@media(max-width:720px){.capturePanel{flex-direction:column}.capturePanel .camMini{width:100%}}
+/* ===== Souvenir page — Newtown Postcard frame ===== */
+/* Common postcard wrapper: 941×1672 → use aspect ratio to keep window alignment exact */
+.souvFrame{position:relative;width:min(440px,88vw);aspect-ratio:941/1672;display:block;margin:0 auto}
+.souvFrame .photoSlot{position:absolute;left:18.9%;top:27.6%;width:62%;height:45.2%;overflow:hidden;background:#000;border-radius:6px}
+.souvFrame .photoSlot video,.souvFrame .photoSlot img{width:100%;height:100%;object-fit:cover;display:block;background:#000}
+.souvFrame .photoSlot video{transform:scaleX(-1)}
+.souvFrame .frameLayer{position:absolute;inset:0;background:url('images/souvenir-frame.webp') center/contain no-repeat;pointer-events:none}
+.souvFrame .cdown{position:absolute;left:18.9%;top:27.6%;width:62%;height:45.2%;display:grid;place-items:center;font-family:'Cormorant Garamond',serif;font-size:clamp(80px,16vw,160px);color:var(--gold);text-shadow:0 0 40px rgba(209,185,140,.9);pointer-events:none;font-weight:400;font-style:italic;z-index:2}
+.souvFrame .cdown.flash{background:rgba(255,255,255,.9);animation:flashFade .6s ease-out}
+@keyframes flashFade{0%{background:rgba(255,255,255,.95)}100%{background:transparent}}
+.souvFrame .fortuneOverlay{position:absolute;left:18.9%;top:62%;width:62%;padding:10px 14px;background:linear-gradient(0deg,rgba(16,16,24,.85),rgba(16,16,24,.5) 70%,transparent);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(11px,1.6vw,15px);color:var(--cream);text-align:center;line-height:1.3;pointer-events:none;z-index:2;text-shadow:0 2px 6px rgba(0,0,0,.8)}
+.souvHint{color:var(--mute);font-size:13px;letter-spacing:.06em;text-align:center;max-width:420px;line-height:1.5}
+.souvHint b{color:var(--gold);font-weight:600}
+/* Souvenir preview: next event panel beside the postcard */
+.nextEvent{display:flex;flex-direction:column;align-items:center;gap:12px;max-width:240px}
+.flyerThumbBtn{background:none;border:1px solid var(--gold);border-radius:6px;padding:6px;cursor:pointer;transition:all .25s;box-shadow:0 10px 24px rgba(0,0,0,.4)}
+.flyerThumbBtn:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(0,0,0,.5)}
+.flyerThumbBtn img{display:block;width:180px;max-width:100%;border-radius:3px}
+.nextEvent .eventName{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:17px;color:var(--cream);text-align:center;line-height:1.3}
+
+/* Slots for drawn cards (ground row) */
+.slots{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:4px}
+.sl{width:130px;aspect-ratio:2/3;border-radius:8px;border:1px dashed rgba(209,185,140,.35);display:grid;place-items:center;color:var(--mute);font-size:10px;letter-spacing:.26em;text-transform:uppercase;perspective:900px;position:relative}
+.sl.on{border-color:var(--gold);border-style:solid;color:transparent;background:transparent;overflow:hidden}
+.sl.on::after{content:"";position:absolute;inset:0;background:url('images/back.jpg') center/cover;border-radius:8px}
+.sl.on.flipped::after{display:none}
+.sl.on img{width:100%;height:100%;object-fit:cover;border-radius:8px;opacity:0;transition:opacity .6s}
+.sl.on.flipped img{opacity:1}
+
+/* Reveal / result panels */
+.panel{background:rgba(243,238,230,.03);border:1px solid rgba(209,185,140,.25);border-radius:3px;padding:28px;max-width:780px;width:100%;text-align:left;position:relative;overflow:hidden}
+.panel .role{font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+.panel h2{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(28px,4vw,44px);color:var(--cream);margin-bottom:14px}
+.panel .poem{font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--teal);font-size:19px;margin:0 0 16px}
+.panel p{margin:0 0 10px;color:#DEDAD1}
+.panel .zh{color:var(--mute);font-size:14px;margin-top:4px}
+.panel .meta{color:var(--mute);font-size:14px;margin-top:12px;letter-spacing:.03em}
+.linkRow{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+a.btn,.btn{display:inline-flex;align-items:center;min-height:42px;padding:8px 20px;border-radius:999px;border:1px solid var(--gold);color:var(--gold);font-weight:600;font-size:12px;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;background:transparent;transition:all .25s}
+a.btn:hover,.btn:hover{background:rgba(209,185,140,.1)}
+.btn.off{border-color:rgba(209,185,140,.25);color:var(--mute);cursor:not-allowed}
+.btn.off:hover{background:transparent}
+.flyer{margin:16px 0 6px;max-width:320px;border-radius:4px;box-shadow:0 10px 30px rgba(0,0,0,.4);display:block}
+
+/* V25 — progressive disclosure Level 3 */
+.moreDetails{margin-top:14px;border-top:1px solid rgba(209,185,140,.18);padding-top:10px}
+.moreDetails summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);padding:6px 2px;user-select:none}
+.moreDetails summary::-webkit-details-marker{display:none}
+.moreDetails summary::after{content:'▾';font-size:10px;transition:transform .2s}
+.moreDetails[open] summary::after{transform:rotate(180deg)}
+.moreDetails summary:hover{color:#eccb7c}
+.moreDetails p{margin-top:10px}
+.grid3 .moreDetails{margin-top:6px;padding-top:6px}
+.grid3 .moreDetails summary{font-size:9px}
+.grid3 .moreDetails p{font-size:12px}
+
+/* Result grid */
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;width:100%;max-width:1200px}
+.grid3 .panel{padding:12px;display:flex;gap:12px;align-items:stretch}
+.grid3 .panelCard{width:38%;flex-shrink:0;aspect-ratio:2/3;object-fit:cover;border-radius:5px;border:1px solid var(--gold);box-shadow:0 6px 16px rgba(0,0,0,.45);align-self:center}
+.grid3 .panelText{flex:1;min-width:0;display:flex;flex-direction:column}
+.grid3 .panel .role{font-size:9px;margin-bottom:3px;letter-spacing:.22em}
+.grid3 .panel h2{font-size:clamp(16px,1.8vw,20px);margin-bottom:5px;line-height:1.1}
+.grid3 .panel .poem{font-size:12px;margin:0 0 6px;line-height:1.3}
+.grid3 .panel p{font-size:12px;margin:0 0 4px;line-height:1.4}
+.grid3 .panel .meta{font-size:11px;margin-top:5px}
+.grid3 .panel .linkRow{margin-top:6px}
+.grid3 .panel a.btn,.grid3 .panel .btn{padding:4px 10px;min-height:26px;font-size:9px;letter-spacing:.14em}
+.grid3 .flyer{max-width:100%}
+@media(max-width:1000px){.grid3{grid-template-columns:1fr;max-width:720px}.grid3 .panelCard{width:30%;max-width:160px}}
+@media(max-width:520px){.grid3 .panel{flex-direction:column;align-items:center;text-align:center}.grid3 .panelCard{width:60%;max-width:180px}.grid3 .panelText{text-align:left;width:100%}}
+.fortune{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(18px,2.3vw,26px);color:var(--gold);text-align:center;max-width:none;margin:6px auto;letter-spacing:.02em;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:860px){.fortune{white-space:normal;font-size:clamp(16px,2.8vw,22px);max-width:34ch}}
+
+/* Library CTA / explore page */
+.libHeader{text-align:center;max-width:760px}
+.libBadge{display:inline-block;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold);padding:5px 14px;border-radius:999px;margin-bottom:16px}
+.libMap{width:100%;max-width:900px;border-radius:4px;border:1px solid rgba(209,185,140,.3);margin:14px 0;background:#f5efe3}
+.libStep{display:flex;gap:14px;padding:14px 0;border-top:1px solid rgba(209,185,140,.15)}
+.libStep:last-child{border-bottom:1px solid rgba(209,185,140,.15)}
+.libStep .n{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:28px;color:var(--gold);min-width:40px;line-height:1}
+.libStep .t{font-weight:600;color:var(--cream);margin-bottom:4px}
+.libStep .d{color:var(--mute);font-size:14px}
+
+/* Banner */
+.banner{background:rgba(209,185,140,.08);color:var(--gold);font-size:12px;padding:10px 16px;border-radius:3px;border:1px solid rgba(209,185,140,.3);letter-spacing:.1em;max-width:780px;text-align:center}
+
+/* Note / toast */
+#note{color:var(--mute);font-size:13px;min-height:1.4em;letter-spacing:.08em}
+
+/* Gesture video + cursor + particles */
+#gestvid{position:fixed;top:16px;right:16px;width:170px;height:128px;border-radius:4px;border:1px solid var(--gold);transform:scaleX(-1);background:#000;z-index:50;object-fit:cover;display:none;box-shadow:0 10px 30px rgba(0,0,0,.6)}
+#gestvid.on{display:block}
+#gestcur{position:fixed;width:30px;height:30px;border-radius:50%;background:rgba(209,185,140,.35);border:2px solid var(--gold);box-shadow:0 0 20px rgba(209,185,140,.7);pointer-events:none;transform:translate(-50%,-50%);z-index:60;display:none;left:-100px;top:-100px}
+#gestcur.on{display:block}
+#geststat{position:fixed;bottom:16px;right:16px;background:rgba(0,0,0,.85);color:var(--ink);padding:10px 14px;border-radius:3px;font-size:13px;z-index:55;max-width:280px;line-height:1.4;display:none;border:1px solid rgba(209,185,140,.3)}
+#geststat.on{display:block}
+#particles{position:fixed;inset:0;pointer-events:none;z-index:45}
+
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01s!important}}
+</style>
+</head>
+<body>
+<svg class="stars" aria-hidden="true"><defs><radialGradient id="sg"><stop offset="0" stop-color="#D1B98C" stop-opacity=".9"/><stop offset="1" stop-color="#D1B98C" stop-opacity="0"/></radialGradient></defs><g id="starG"></g></svg>
+<div id="app"></div>
+<canvas id="particles" aria-hidden="true"></canvas>
+<video id="gestvid" muted playsinline aria-hidden="true"></video>
+<div id="gestcur" aria-hidden="true"></div>
+<div id="fistRing" aria-hidden="true"></div>
+<div id="geststat" role="status" aria-live="polite"></div>
+<script>
+/* ============================================================
+   LUCKY FORTUNE WALL · V2
+   All six themes + Mystical Newtown subpath.
+   Content from Lucky_Fortune_Wall_Tarot_Stories.md.
+   ============================================================ */
+
+const INTERESTS = [
+  {id:'music',   label:'Music',          theme:'Follow the Sounds of Newtown', reading:'music-001'},
+  {id:'art',     label:'Art',            theme:'The Streets Are Speaking',     reading:'art-001'},
+  {id:'food',    label:'Food',           theme:'A Taste of Newtown',           reading:'food-001'},
+  {id:'history', label:'History',        theme:'Walk Through Time',            reading:'history-001'},
+  {id:'hidden',  label:'Hidden Places',  theme:'Beyond the Busy Street',       hasSubpath:true,
+                 defaultReading:'hidden-quiet-001', mysticalReading:'hidden-mystical-001'},
+  {id:'voices',  label:'Stories & Voices', theme:'Every Voice Has a Story',    reading:'voices-001'},
+];
+
+const READINGS = {
+'music-001': {
+  interest:'music',
+  final:{en:'Your Newtown story has a soundtrack. Find where it plays next.'},
+  past:{title:'The Echo', role:'Past · Local Story', poem:'Every neighbourhood has its own soundtrack.',
+    en:"Built in 1908, the Enmore Theatre has witnessed generations of entertainment and cultural change. Its survival reminds us that Newtown's stories are also carried through performances, audiences, and the places where they gather.",
+    image:'images/music-past.jpg'},
+  present:{title:'The Stage', role:'Present · Local Place', poem:'Some stories are better experienced live.',
+    en:"At Enmore Theatre, music and performance continue to bring people together. Behind its historic façade, each programme is an opportunity to discover another side of Newtown's cultural life.",
+    place:'Enmore Theatre · 118–132 Enmore Road, Newtown',
+    mapUrl:'https://www.google.com/maps/search/?api=1&query=Enmore+Theatre+Newtown',
+    image:'images/music-present.jpg'},
+  future:{title:'The Invitation', role:'Future · Action', poem:'Your next memory might begin with a ticket.',
+    en:"The next song hasn't started yet. Browse an upcoming performance, choose something that catches your attention, and let one night of music introduce you to a new side of Newtown.",
+    ctaLabel:'Discover Upcoming Shows', ctaUrl:'https://www.enmoretheatre.com.au/',
+    image:'images/music-future.jpg'}
+},
+'art-001': {
+  interest:'art',
+  final:{en:'The streets have something to say. Look a little closer.'},
+  past:{title:'The Mark', role:'Past · Local Story', poem:'Not every story belongs in a gallery.',
+    en:"Posters, murals and other forms of street expression have long helped make Newtown's cultural life visible. The layers left on walls tell us that creative expression can belong to everyday public space, not only to galleries.",
+    image:'images/art-past.jpg'},
+  present:{title:'The Canvas', role:'Present · Local Place', poem:'Art is waiting where you least expect it.',
+    en:'Look for Newtown ArtSeat in Pride Square. This public art display brings artwork into a space people pass through every day, inviting them to stop and look more closely.',
+    place:'Newtown ArtSeat · Pride Square, Newtown',
+    mapUrl:'https://www.google.com/maps/search/?api=1&query=Pride+Square+Newtown',
+    image:'images/art-present.jpg'},
+  future:{title:'The New Perspective', role:'Future · Action', poem:'The next artwork you discover may change the way you see this street.',
+    en:'Look at the latest public art display, or revisit an artwork you usually walk past. Take a moment to notice who made it and what it might be trying to communicate.',
+    ctaLabel:'Discover Local Art', ctaUrl:'https://www.innerwest.nsw.gov.au/explore/arts-culture-and-history',
+    image:'images/art-future.jpg', flyer:'images/flyer-art.jpg',
+    flyerTitle:'Art With Heart · Between Streets and Minds',
+    flyerBlurb:'A free community art fair hosted by Newtown Neighbourhood Centre. Bring curiosity (and cash or PayID) — meet local artists and see work shaped by this neighbourhood.',
+    flyerSource:'Newtown Neighbourhood Centre'}
+},
+'food-001': {
+  interest:'food',
+  final:{en:'Every flavour is a doorway to a different story.'},
+  past:{title:'The Shared Table', role:'Past · Local Story', poem:'Every flavour carries a story.',
+    en:"Newtown's food culture reflects people from different backgrounds who have made the area their home. Over time, migration, small businesses, and everyday exchange have contributed to the neighbourhood's variety of food traditions.",
+    image:'images/food-past.jpg'},
+  present:{title:'The Flavour', role:'Present · Local Place', poem:'Sometimes, a new place begins with a new taste.',
+    en:'Walk along King Street and notice the range of cafés, bakeries and restaurants around you. The food on this street offers an everyday glimpse of how different communities meet and coexist in Newtown.',
+    place:'King Street, Newtown',
+    mapUrl:'https://www.google.com/maps/search/?api=1&query=King+Street+Newtown',
+    image:'images/food-present.jpg'},
+  future:{title:'The First Bite', role:'Future · Action', poem:"Your next favourite place might be somewhere you've never tried.",
+    en:'Take a small detour along King Street. Choose a café, bakery or restaurant that sparks your curiosity, and try something new. One unfamiliar flavour may become part of your Newtown routine.',
+    ctaLabel:'Explore Food on King Street', ctaUrl:'https://www.google.com/maps/search/?api=1&query=King+Street+Newtown+cafes',
+    image:'images/food-future.jpg', flyer:'images/flyer-food.jpg',
+    flyerTitle:'Newtown Restaurant Week · Menu of Menus',
+    flyerBlurb:'A week-long celebration of King Street dining — special menus across neighbourhood restaurants. A good excuse to try somewhere new on the strip.',
+    flyerSource:'Newtown Business Association'}
+},
+'history-001': {
+  interest:'history',
+  final:{en:'The past is still here, waiting to be noticed.'},
+  past:{title:'The Arrival', role:'Past · Local Story', poem:'Every place has a moment that changes its path.',
+    en:'The railway opened through Newtown in 1855, connecting the area more closely with Sydney. As transport, population and commerce developed, the neighbourhood became an increasingly active place to live, trade and gather.',
+    image:'images/history-past.jpg'},
+  present:{title:'The Timekeeper', role:'Present · Local Place', poem:'The past is not gone. It is hidden in plain sight.',
+    en:'Look above the shop windows along King Street. Historic façades and architectural details remain visible beside newer signs and businesses, revealing how different periods of Newtown exist together.',
+    place:'King Street historic streetscape, Newtown',
+    mapUrl:'https://www.google.com/maps/search/?api=1&query=King+Street+Newtown',
+    image:'images/history-present.jpg'},
+  future:{title:'The Footsteps', role:'Future · Action', poem:'To discover the past, sometimes you only need to look up.',
+    en:'Begin near Newtown Station and walk a short stretch of King Street. Pick one old-looking building, study its details and find out what you can about its earlier life.',
+    ctaLabel:'Start Your History Walk', ctaUrl:'https://www.google.com/maps/search/?api=1&query=Newtown+Station+Sydney',
+    image:'images/history-future.jpg', flyer:'images/flyer-history.jpg',
+    flyerTitle:'Newtown Historic Market Day',
+    flyerBlurb:'A one-day historic market along King Street — stalls, period costumes and live period music. Pair it with a short walk between the old shopfronts.',
+    flyerSource:'Local community listing'}
+},
+'hidden-quiet-001': {
+  interest:'hidden', subpath:'quiet',
+  final:{en:'Sometimes the most meaningful discoveries are the quiet ones.'},
+  past:{title:'The Hidden Layer', role:'Past · Local Story', poem:'Some places hold more than one story.',
+    en:"The grounds of today's Camperdown Memorial Rest Park have a history as a cemetery dating to the nineteenth century. The place has changed over time, while traces of its earlier use remain part of the landscape.",
+    image:'images/hidden-past.jpg'},
+  present:{title:'The Quiet Space', role:'Present · Local Place', poem:'Not every discovery needs to be loud.',
+    en:'Away from the busy commercial streets, Camperdown Memorial Rest Park offers a public green space for slowing down and noticing a different rhythm of local life.',
+    place:'Camperdown Memorial Rest Park · Church Street, Newtown',
+    mapUrl:'https://www.google.com/maps/search/?api=1&query=Camperdown+Memorial+Rest+Park',
+    image:'images/hidden-present.jpg'},
+  future:{title:'The Detour', role:'Future · Action', poem:'The best discoveries sometimes begin by leaving your usual route.',
+    en:'Take a quiet walk through the park. Notice the trees and historic surroundings, and explore respectfully: this landscape also preserves an important memorial and cemetery history.',
+    ctaLabel:'Discover a Quieter Newtown', ctaUrl:'https://www.google.com/maps/search/?api=1&query=Camperdown+Memorial+Rest+Park',
+    image:'images/hidden-future.jpg'}
+},
+'hidden-mystical-001': {
+  interest:'hidden', subpath:'mystical',
+  final:{en:'Sometimes the mystery is simply noticing what was always there.'},
+  past:{title:'The Symbol', role:'Past · Local Story', poem:'Every symbol holds a different meaning.',
+    en:'For centuries, people have used cards, stars and symbols to ask questions about uncertainty. Tarot can also be a playful way to reflect and notice familiar things from a different perspective.',
+    image:'images/mystical-past.jpg'},
+  present:{title:'The Mystic Street', role:'Present · Local Place', poem:'A little mystery hides in plain sight.',
+    en:'Along King Street, you may notice windows displaying crystals, tarot cards and mystical symbols. These curious details offer a glimpse of the street\'s eclectic cultural character.',
+    place:'King Street, Newtown · self-guided (no specific shop)',
+    mapUrl:'https://www.google.com/maps/search/?api=1&query=King+Street+Newtown',
+    image:'images/mystical-present.jpg'},
+  future:{title:'The Seeker', role:'Future · Action', poem:'Follow your curiosity. See where it takes you.',
+    en:"Wander along King Street and look for a mysterious corner. Notice a symbol you've never seen before, explore an interesting window display, or simply let something unexpected catch your eye.",
+    ctaLabel:'Explore the Mystical Side', ctaUrl:'https://www.google.com/maps/search/?api=1&query=King+Street+Newtown',
+    image:'images/mystical-future.jpg', flyer:'images/flyer-mystical.jpg',
+    flyerTitle:'Mystical Light Dance Party',
+    flyerBlurb:'An evening of music, lanterns and moon-lit rooftop dancing at The Lido Stage — the mystical mood extended into an actual night out.',
+    flyerSource:'The Lido Stage'}
+},
+'voices-001': {
+  interest:'voices',
+  final:{en:'Every place has a story. Sometimes, you need to hear it from someone else.'},
+  past:{title:'The Memory', role:'Past · Local Story', poem:'Some places have lived more than one life.',
+    en:'Before it became Newtown Library, the building on Brown Street was associated with the Salvation Army Citadel. Its changing role reminds us that buildings can carry the memories of different communities over time.',
+    image:'images/voices-past.jpg'},
+  present:{title:'The Listener', role:'Present · Local Place', poem:'A story becomes meaningful when someone listens.',
+    en:"On Brown Street, Newtown Library offers a place for reading, learning and spending time. But some of Newtown's most personal stories live in the voices of people who call the neighbourhood home.",
+    place:'Newtown Library · 8–10 Brown Street, Newtown',
+    mapUrl:'https://www.google.com/maps/search/?api=1&query=Newtown+Library+Brown+Street+Newtown',
+    image:'images/voices-present.jpg'},
+  future:{title:'The Borrowed Voice', role:'Future · Action', poem:"Your next discovery isn't a place. It's a person.",
+    en:"Visit the proposed Listening Library experience on Brown Street. Choose a local resident's story, listen to their voice and leave a little echo of your own. You can also sit with someone else and exchange what you heard. Some connections begin with simply listening.",
+    ctaLabel:'Find the Listening Library', ctaUrl:'#/library',
+    image:'images/voices-future.jpg', isLibraryCta:true}
+}
+};
+
+const ROLES = ['past','present','future'];
+const WHO = {
+  1:{past:'Reveal your Past card.', present:'Now reveal your Present card.', future:'Last one: reveal your Future card.'},
+  2:{past:'Person A: reveal the Past card.', present:'Person B: reveal the Present card.', future:'Together: reveal the Future card.'},
+  3:{past:'Person A: reveal the Past card.', present:'Person B: reveal the Present card.', future:'Person C: reveal the Future card.'}
+};
+
+/* V26 Together Mode state:
+   - people: 1/2/3 picked at start, locked for session
+   - players[]: archived per-player readings {interest, subpath, readingId, revealed, focus}
+   - currentPlayer: index into players for the person drawing right now
+   - interest/subpath/readingId/revealed/focus: the CURRENT player's live state */
+const S = { screen:'attract', people:1, players:[], currentPlayer:0, interest:null, subpath:null, revealed:[], focus:null, readingId:null };
+const PLAYER_NAMES = ['Player A','Player B','Player C'];
+const souv = { captured:null, countdown:null };
+const $app = document.getElementById('app');
+const esc = s => String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let idleT;
+
+function go(screen){ if(screen !== 'attract') stopAttractRotate(); S.screen = screen; render(); window.scrollTo(0,0); updateGestVisibility(); }
+function updateGestVisibility(){
+  // The small gest preview only shows on draw screen (result has its own camera view inline)
+  const v = document.getElementById('gestvid'); if(!v) return;
+  if(gest.on && S.screen === 'draw') v.classList.add('on');
+  else v.classList.remove('on');
+  const c = document.getElementById('gestcur'); if(c && S.screen !== 'draw') c.classList.remove('on');
+}
+function reset(){ disableGesture(true); souv.captured = null; Object.assign(S,{screen:'attract',interest:null,subpath:null,revealed:[],focus:null,readingId:null,people:1,players:[],currentPlayer:0,mode:null}); history.replaceState(null,'',location.pathname+location.search); render(); }
+/* V26: start the next player's turn — clear live fields, keep people / players / currentPlayer */
+function nextPlayerTurn(){
+  S.interest = null; S.subpath = null; S.readingId = null;
+  S.revealed = []; S.focus = null;
+}
+/* V26: save the current player's completed draw into S.players[currentPlayer] */
+function archiveCurrentPlayer(){
+  S.players[S.currentPlayer] = {
+    interest:S.interest, subpath:S.subpath, readingId:S.readingId,
+    revealed:S.revealed.slice(), focus:S.focus
+  };
+}
+function bump(){ clearTimeout(idleT); if(S.screen!=='attract') idleT=setTimeout(reset,90000); }  /* V25: 90s idle timeout */
+
+/* V25: Passive Mode — rotating Newtown invitations on the attract screen */
+const ATTRACT_LINES = [
+  'Draw three cards. Discover a new side of Newtown.',
+  'Every street holds an echo.',
+  'Follow the sound around the corner.',
+  'Not every story belongs in a gallery.',
+  'Art is waiting where you least expect it.',
+  'Every flavour carries a story.',
+  'Some places have lived more than one life.',
+  'The best discoveries sometimes begin by leaving your usual route.',
+  'Your next discovery isn’t a place. It’s a person.'
+];
+let attractT = null, attractI = 0;
+function startAttractRotate(){
+  if(attractT) clearInterval(attractT);
+  attractI = 0;
+  attractT = setInterval(()=>{
+    const el = document.getElementById('attractSub'); if(!el){ clearInterval(attractT); attractT=null; return; }
+    attractI = (attractI + 1) % ATTRACT_LINES.length;
+    el.style.opacity = '0';
+    setTimeout(()=>{ el.textContent = ATTRACT_LINES[attractI]; el.style.opacity = '1'; }, 500);
+  }, 4500);
+}
+function stopAttractRotate(){ if(attractT){ clearInterval(attractT); attractT = null; } }
+document.addEventListener('pointerdown',bump); document.addEventListener('keydown',bump);
+
+/* ---------- Icons ---------- */
+const ICON_MUSIC_ON  = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 18V6l10-2v12"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="16" r="2"/></svg>';
+const ICON_MUSIC_OFF = '<svg viewBox="0 0 24 24" fill="currentColor" opacity=".55"><path d="M9 18V6l10-2v12"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="16" r="2"/><line x1="3" y1="3" x2="21" y2="21" stroke="currentColor" stroke-width="2.5" opacity="1"/></svg>';
+const ICON_HAND_ON   = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 11V5a2 2 0 1 1 4 0v6M14 11V3a2 2 0 1 1 4 0v8M10 11V7a2 2 0 1 0-4 0v8c0 3 2 6 6 6s6-3 6-6v-4a2 2 0 0 0-4 0"/></svg>';
+const ICON_HAND_OFF  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity=".5"><path d="M10 11V5a2 2 0 1 1 4 0v6M14 11V3a2 2 0 1 1 4 0v8M10 11V7a2 2 0 1 0-4 0v8c0 3 2 6 6 6s6-3 6-6v-4a2 2 0 0 0-4 0"/><line x1="3" y1="3" x2="21" y2="21" stroke="currentColor" opacity="1"/></svg>';
+/* Spin icon — open hand with spreading fingers (gold) */
+const ICON_OPEN_HAND = '<svg viewBox="0 0 1024 1024" fill="currentColor"><path d="M506.848 384.576q18.272 0 33.728 10.272l126.848 84.576q34.848 22.848 62.848 55.424l83.424 97.152q22.848 26.272 16.576 60.576l-41.152 236q-3.424 18.272-16.864 30.56t-31.712 14.56l-301.152 32-201.152 18.272-5.152 0q-22.272 0-38.56-16t-16.288-38.848q0-21.152 15.424-36.576t37.152-18.272l148.576-18.272-256 0q-23.424 0-39.712-17.152t-15.136-40.576q1.152-22.272 18.272-37.152t39.424-14.848l252.576-0.576-297.728-36.576q-23.424-2.848-37.728-21.152t-10.848-41.728q3.424-20 19.712-32.864t37.44-12.864l5.728 0 274.848 34.272-200.576-53.728q-21.728-5.728-35.424-23.712t-10.272-39.136q3.424-20.576 18.848-33.44t35.424-12.864q3.424 0 11.424 1.152l256 54.848 124 21.152q0.576 0 1.728 0.288t1.728 0.288q13.152 0 17.44-13.152t-7.136-20.576l-106.272-71.424q-20-13.152-24-36.288t10.272-42.016q15.424-21.728 43.424-21.728zM466.848 500l106.272 71.424-124.576-21.152-2.848-1.152-20.576-21.728-136-149.728q-0.576-0.576-1.44-2.016t-1.44-2.016q-13.728-17.728-10.56-40t21.44-36.576q17.728-13.152 38.848-10.016t36.576 19.136l81.152 84-2.272 2.272t-2.848 2.272q-18.272 25.728-13.152 56.576t31.424 48.576zM973.728 240.576l8.576 152q2.272 41.728-6.272 84l-27.424 125.152q-6.848 33.728-38.272 49.728l-60.576 30.848q1.152-35.424-22.272-62.272l-83.424-97.152q-30.272-34.848-66.848-58.848l-126.848-84.576q-19.424-13.152-43.424-13.152-29.152 0-50.272 21.152l-134.272-178.272q-14.272-18.848-10.272-42.016t23.424-36.288q18.848-12.576 40.864-8t35.712 22.848l152 201.152-149.728-260q-12-20-6.016-42.848t27.136-33.728q20-10.272 41.44-3.424t32.864 26.272l137.728 240-77.728-192.576q-8.576-20-2.56-42.272t25.44-32q21.152-10.848 43.424-3.424t32 29.152l110.272 237.152 57.728 112q4.576 8.576 13.152 10.016t15.424-4.288 6.272-14.848l-6.848-128q-1.152-23.424 14.848-40.576t39.424-17.728q22.272 0 38.272 16.288t17.152 38.56z"/></svg>';
+/* Pick icon — grabbing hand (coral) */
+const ICON_FIST = '<svg viewBox="0 0 1024 1024" fill="currentColor"><path d="M511.888 219.424q-30.272 0-51.712 21.44t-21.44 51.712l0 73.152-18.272 0 0-53.152q0-27.424-18.272-46.56t-45.728-19.136q-26.272 0-45.152 18.848t-18.848 45.152l0 245.152-18.272-17.152 0-98.272q0-27.424-18.272-46.56t-45.728-19.136q-26.272 0-45.152 18.848t-18.848 45.152l0 128q0 26.848 20 46.848l177.152 169.152q22.272 22.272 22.272 58.272 0 14.848 10.848 25.728t25.728 10.848l365.728 0q14.848 0 25.728-10.848t10.848-25.728l0-14.272q0-23.424 5.728-44l61.728-249.152q5.728-20.576 5.728-44l0-140.576q0-27.424-18.272-46.56t-45.728-19.136q-26.272 0-45.152 18.848t-18.848 45.152l0 18.272-18.272 0 0-71.424q0-22.848-14.272-41.44t-36.576-23.136q-8-1.152-13.152-1.152-26.272 0-45.152 18.848t-18.848 45.152l0 73.152-18.272 0 0-69.728q0-29.152-18.56-51.136t-47.136-24.864q-2.848-0.576-7.424-0.576zM511.888 146.272q48 0 85.152 28.576 32.576-19.424 70.272-19.424 33.728 0 63.424 15.424t49.152 43.424q15.424-4 33.728-4 57.152 0 97.152 40.864t40 98.016l0 140.576q0 29.152-7.424 61.728l-62.272 249.152q-3.424 13.728-3.424 40.576 0 45.728-32 77.728t-77.728 32l-365.728 0q-48 0-78.848-33.44t-30.848-81.44l-176-169.152q-43.424-41.728-43.424-100l0-128q0-56.576 40.288-96.864t96.864-40.288q6.272 0 9.152 0.576 3.424-54.272 43.136-91.424t94.016-37.152q29.728 0 56 12 41.152-39.424 99.424-39.424z"/></svg>';
+
+function audioState(){ return (typeof audio!=='undefined' && audio) ? audio : {on:false}; }
+function gestState(){ return (typeof gest!=='undefined' && gest) ? gest : {on:false,loading:false}; }
+
+/* ---------- Top bar ---------- */
+function topBar(showBack){
+  const showHand = S.screen==='draw';
+  return `<div class="top">
+    <span class="brand">Lucky Fortune Wall</span>
+    <span class="topR">
+      ${showHand?`<button class="iconBtn" data-act="gest" data-on="${gestState().on}" ${gestState().loading?'disabled':''} aria-label="hand gestures">${gestState().on?ICON_HAND_ON:ICON_HAND_OFF}</button>`:''}
+      ${showBack?`<button class="ghost" data-act="back">Back</button>`:''}
+      ${S.screen!=='attract'?`<button class="ghost" data-act="restart">Restart</button>`:''}
+    </span></div>`;
+}
+
+/* ---------- Render ---------- */
+function render(){
+  bump();
+  if(S.screen==='attract'){
+    $app.innerHTML = `${topBar()}
+      <main>
+        <div class="hero">
+          <div class="tag">An outdoor interactive installation · Newtown, Sydney</div>
+          <h1>What does Newtown have for you today?</h1>
+          <p id="attractSub">Draw three cards. Discover a new side of Newtown.</p>
+        </div>
+        <div class="heroCards" aria-hidden="true">
+          <div class="hc hc1"><div class="ac"></div></div>
+          <div class="hc hc2"><div class="ac"></div></div>
+          <div class="hc hc3"><div class="ac"></div></div>
+        </div>
+        <button class="cta" data-act="start">Begin</button>
+        <div class="passiveHint">A little curious? Draw your Newtown fortune.</div>
+      </main>`;
+    startAttractRotate();
+    return;
+  }
+  /* V26 Together Mode — two-step people picker: Just me / Together, then (if Together) 2 / 3 */
+  if(S.screen==='people'){
+    /* S.mode: 'solo' | 'together' | null */
+    const mode = S.mode || null;
+    const n = S.people;
+    const togetherChosen = mode === 'together';
+    $app.innerHTML = `${topBar(true)}
+      <main>
+        <div class="sectionSub">How many are drawing today?</div>
+        <h2 class="sectionTitle">Who's with you?</h2>
+        <div class="peoplePick peoplePick2">
+          <button class="peopleBtn" data-mode="solo" aria-pressed="${mode==='solo'}">
+            <div class="peopleN">1</div>
+            <div class="peopleLbl">Just me</div>
+            <div class="peopleHint">A solo reading</div>
+          </button>
+          <button class="peopleBtn" data-mode="together" aria-pressed="${togetherChosen}">
+            <div class="peopleN">2–3</div>
+            <div class="peopleLbl">Together</div>
+            <div class="peopleHint">Compare readings · pick one adventure</div>
+          </button>
+        </div>
+        ${togetherChosen ? `
+          <div class="sectionSub" style="margin-top:12px">With how many?</div>
+          <div class="peopleSub">
+            <button class="peopleSubBtn" data-ppl="2" aria-pressed="${n===2}"><span class="n">2</span>people</button>
+            <button class="peopleSubBtn" data-ppl="3" aria-pressed="${n===3}"><span class="n">3</span>people</button>
+          </div>
+        ` : ''}
+        <button class="cta" data-act="confirmPeople" ${(mode==='solo' || (togetherChosen && (n===2||n===3)))?'':'disabled'}>Continue →</button>
+      </main>`;
+    return;
+  }
+  /* V26 Together Mode — handover screen between players */
+  if(S.screen==='handover'){
+    const nextName = PLAYER_NAMES[S.currentPlayer] || 'Next player';
+    const prevName = PLAYER_NAMES[S.currentPlayer-1] || 'Previous player';
+    const isLast = S.currentPlayer === S.people - 1;
+    $app.innerHTML = `${topBar(false)}
+      <main style="gap:18px">
+        <div class="handoverCard">
+          <div class="handoverStep">${S.currentPlayer+1} / ${S.people}</div>
+          <h2 class="handoverTitle">${esc(nextName)}, it's your turn.</h2>
+          <p class="handoverSub">Pass the Fortune Wall to the next person.<br>You will choose your own interest and draw your own three cards.</p>
+          <div class="handoverDots">
+            ${Array.from({length:S.people}, (_,i)=>`<span class="dot ${i<S.currentPlayer?'done':i===S.currentPlayer?'now':''}"></span>`).join('')}
+          </div>
+          ${isLast ? `<div class="handoverFinal">After this reading you will see <b>Our Shared Adventure</b>.</div>` : ''}
+        </div>
+        <button class="cta" data-act="startNextPlayer">I'm ready →</button>
+      </main>`;
+    return;
+  }
+  if(S.screen==='interest'){
+    const header = S.people>1 ? `<div class="playerBadge">${esc(PLAYER_NAMES[S.currentPlayer])} · ${S.currentPlayer+1} / ${S.people}</div>` : '';
+    $app.innerHTML = `${topBar(true)}
+      <main>
+        ${header}
+        <div class="sectionSub">Choose your interest</div>
+        <h2 class="sectionTitle">${S.people>1 ? 'What are '+(S.currentPlayer===0?'you':'you')+' curious about?' : 'What are you curious about?'}</h2>
+        <div class="chips">
+          ${INTERESTS.map(i=>`<button class="chip" data-int="${i.id}" aria-pressed="${S.interest===i.id}">
+            <div class="name">${esc(i.label)}</div><div class="tag">${esc(i.theme)}</div>
+          </button>`).join('')}
+        </div>
+        <button class="cta" data-act="toNextFromInterest" ${S.interest?'':'disabled'}>Continue</button>
+      </main>`;
+    return;
+  }
+  if(S.screen==='subpath'){
+    $app.innerHTML = `${topBar(true)}
+      <main>
+        <div class="sectionSub">Hidden Places · choose your path</div>
+        <h2 class="sectionTitle">Two ways to leave the busy street.</h2>
+        <div class="pathChoice">
+          <button class="pathCard" data-sub="quiet">
+            <div class="glyph">❋</div>
+            <div><h3>Quiet Corners</h3>
+            <p>Historic parks, overlooked green spaces, and a slower rhythm of Newtown — away from the noise of King Street.</p></div>
+            <div class="goBtn">Follow this path →</div>
+          </button>
+          <button class="pathCard" data-sub="mystical">
+            <div class="glyph">☾</div>
+            <div><h3>Mystical Newtown</h3>
+            <p>Tarot windows, crystals and curious symbols that quietly line King Street. A self-guided walk for the curious eye.</p></div>
+            <div class="goBtn">Follow this path →</div>
+          </button>
+        </div>
+      </main>`;
+    return;
+  }
+  const rd = READINGS[S.readingId];
+  if(!rd){ reset(); return; }
+  if(S.screen==='draw'){
+    const n = S.revealed.length;
+    const nextRole = ROLES[n] || 'future';
+    /* V26: Together Mode uses solo-prompt per player (each player gets their own 3 cards). */
+    const prompt = n<3 ? WHO[1][nextRole] : 'The reading is complete.';
+    const gestHint = n<3 && gestState().on;
+    const touchHint = n<3 && !gestState().on;
+    /* V25: gesture guide at the TOP, only showing current-step gestures */
+    const guideHTML = gestHint ? `<div class="ggGuide ${n===0?'intro':''}" aria-label="How to draw your cards">
+          <span class="ggLabel">How to draw</span>
+          <span class="ggItem">${ICON_OPEN_HAND}<span>Rotate</span><small>move the ring</small></span>
+          <span class="ggDivider"></span>
+          <span class="ggItem pick">${ICON_FIST}<span>Confirm</span><small>select the card</small></span>
+        </div>` : (touchHint ? `<div class="hint">Drag the ring to spin · Tap the front card to pick it.</div>` : '');
+    const playerBadge = S.people>1 ? `<div class="playerBadge">${esc(PLAYER_NAMES[S.currentPlayer])} · drawing</div>` : '';
+    const isLastPlayer = S.currentPlayer === S.people - 1;
+    const ctaLabel = S.people>1 ? (isLastPlayer ? 'See the shared adventure →' : 'Pass to next player →') : 'See your reading →';
+    $app.innerHTML = `${topBar(true)}
+      <main style="gap:12px">
+        ${playerBadge}
+        <div class="prompt" aria-live="polite">${esc(prompt)}<span class="cnt">${n} / 3</span></div>
+        ${n===3?`<button class="cta" data-act="toResult" style="margin:10px 0 2px">${esc(ctaLabel)}</button>`:''}
+        ${n<3 ? guideHTML : ''}
+        <div class="ring" id="ring">
+          <div class="ring-badge">The Fate Ring <b>${n}/3</b></div>
+          <div class="ring-perspective"><div class="ring-inner" id="ringInner"></div></div>
+        </div>
+        <div class="slots" id="slots">${ROLES.map(r=>slotHTML(r,rd)).join('')}</div>
+      </main>`;
+    initRing();
+    return;
+  }
+  /* V26 Together Mode — "Our Newtown Constellation" shared adventure page */
+  if(S.screen==='constellation'){
+    if(souv.captured){ S.screen = 'souvenir'; render(); return; }
+    const playerBlocks = S.players.map((pl,i)=>{
+      const prd = READINGS[pl.readingId];
+      if(!prd) return '';
+      return `<div class="playerBlock">
+        <div class="playerBlockHd">
+          <span class="playerBlockName">${esc(PLAYER_NAMES[i])}</span>
+          <span class="playerBlockTheme">${esc(getInterestLabel(prd))}</span>
+        </div>
+        <div class="grid3">${ROLES.map(r=>cardPanel(r,prd,true)).join('')}</div>
+      </div>`;
+    }).join('');
+    const futureTitles = S.players.map((pl,i)=>{
+      const prd = READINGS[pl.readingId];
+      return prd ? `<div class="sharedFuture"><span class="sfLbl">${esc(PLAYER_NAMES[i])}'s future</span><div class="sfTitle">${esc(prd.future.title)}</div><div class="sfPoem">${esc(prd.future.poem)}</div></div>` : '';
+    }).join('');
+    $app.innerHTML = `${topBar(true)}
+      <main style="gap:14px">
+        <div class="sectionSub">Our Newtown Constellation</div>
+        <h2 class="sectionTitle" style="font-size:clamp(26px,3.4vw,40px)">${S.people===2?'Two readings · one city':'Three readings · one city'}</h2>
+        <div class="constellation">
+          ${playerBlocks}
+        </div>
+        <div class="sharedAdventure">
+          <div class="sectionSub" style="color:var(--gold)">Our Shared Adventure</div>
+          <div class="sharedFutures">${futureTitles}</div>
+          <div class="fortune" style="white-space:normal;max-width:800px;margin:4px auto 0">Decide together which Newtown adventure you'll take this week.</div>
+        </div>
+        <div class="linkRow" style="justify-content:center;margin-top:8px">
+          <button class="cta cta-photo" data-act="toSouv"><img src="images/camera-icon.webp" alt="">Capture a Group Souvenir</button>
+          <button class="btn" data-act="restart">Start over</button>
+        </div>
+        <div id="note" aria-live="polite" style="min-height:1em"></div>
+      </main>`;
+    return;
+  }
+  if(S.screen==='result'){
+    // If a photo was taken already, bounce to souvenir page which hosts the postcard preview
+    if(souv.captured){ S.screen = 'souvenir'; render(); return; }
+    // Show the reading; capture is on a separate souvenir page
+    $app.innerHTML = `${topBar(true)}
+      <main style="gap:10px">
+        <div class="sectionSub">Your Newtown reading</div>
+        <h2 class="sectionTitle" style="font-size:clamp(24px,3.4vw,36px)">${esc(getInterestLabel(rd))}</h2>
+        <div style="width:100%;display:flex;flex-direction:column;align-items:center;gap:10px">
+          <div class="grid3">${ROLES.map(r=>cardPanel(r,rd,true)).join('')}</div>
+          <div class="fortune">${esc(rd.final.en)}</div>
+        </div>
+        <div class="linkRow" style="justify-content:center;margin-top:6px">
+          <button class="cta cta-photo" data-act="toSouv"><img src="images/camera-icon.webp" alt="">Capture a Souvenir</button>
+          <button class="btn" data-act="restart">Try again</button>
+        </div>
+        <div id="note" aria-live="polite" style="min-height:1em"></div>
+      </main>`;
+    return;
+  }
+  if(S.screen==='souvenir'){
+    const isGroup = S.people > 1;
+    /* V26 group mode: pick the last player's reading for the flyer suggestion (any player's would do);
+       use a shared fortune line instead of one player's final. */
+    const groupFortune = 'Three Newtowns · one adventure';
+    const twoFortune = 'Two Newtowns · one adventure';
+    const sharedFortune = S.people===3 ? groupFortune : (S.people===2 ? twoFortune : null);
+    // Dedicated souvenir page — camera, 3-2-1, Take Photo
+    if(souv.captured){
+      const c = rd.future;
+      const hasFlyer = !!c.flyer;
+      const fortuneLine = isGroup ? sharedFortune : rd.final.en;
+      const headerLbl = isGroup ? `Group postcard · ${S.people} of you` : `Your Newtown postcard · ${esc(getInterestLabel(rd))}`;
+      $app.innerHTML = `${topBar(true)}
+        <main style="gap:14px">
+          <div class="sectionSub">${headerLbl}</div>
+          <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;justify-content:center">
+            <div class="souvFrame" id="souvPoster">
+              <div class="photoSlot"><img src="${souv.captured}" alt="your photo"></div>
+              <div class="fortuneOverlay">${esc(fortuneLine)}</div>
+              <div class="frameLayer"></div>
+            </div>
+            ${hasFlyer && !isGroup ? `<div class="nextEvent">
+              <div class="sectionSub" style="margin:0">The next step</div>
+              <button class="flyerThumbBtn" data-act="toFlyer" aria-label="View the flyer"><img src="${esc(c.flyer)}" alt="${esc(c.flyerTitle||c.title)} flyer"></button>
+              <div class="eventName">${esc(c.flyerTitle || c.title)}</div>
+              <button class="btn" data-act="toFlyer">View the flyer ↗</button>
+            </div>` : ''}
+          </div>
+          <div class="linkRow" style="justify-content:center">
+            <button class="cta" data-act="dlSouv">Save to your device</button>
+            <button class="btn" data-act="retakeSouv">Retake</button>
+            <button class="btn" data-act="restart">Start over</button>
+          </div>
+          <div id="note" aria-live="polite" style="min-height:1em"></div>
+        </main>`;
+      return;
+    }
+    // V25 fix: ensure gesture (and camera) is ON so peace-sign hint is always truthful
+    if(!gestState().on && !gestState().loading){ try{ enableGesture && enableGesture(); }catch(e){} }
+    const camHint = isGroup
+      ? 'Everyone, strike a <b>peace sign ✌️</b> — or press the button. We\'ll count <b>3-2-1</b>.'
+      : 'Make a <b>peace sign ✌️</b> or press the button — we\'ll count <b>3-2-1</b>.';
+    const headerTitle = isGroup ? 'Save a group postcard of your readings.' : 'Save a postcard of this reading.';
+    const subLbl = isGroup ? `Group souvenir · ${S.people} of you` : 'Capture a souvenir';
+    const topFortune = isGroup ? sharedFortune : rd.final.en;
+    $app.innerHTML = `${topBar(true)}
+      <main style="gap:14px">
+        <div class="sectionSub">${esc(subLbl)}</div>
+        <h2 class="sectionTitle" style="font-size:clamp(26px,3.4vw,40px)">${esc(headerTitle)}</h2>
+        <div class="fortune" style="margin-top:0">${esc(topFortune)}</div>
+        <div class="capturePanel" style="max-width:620px">
+          <div class="camMini">
+            <video id="selfVid" autoplay playsinline muted></video>
+            <div class="miniCd" id="cdown"></div>
+          </div>
+          <div class="copy">
+            <div class="lbl">${isGroup ? 'Your group photo' : 'Your postcard photo'}</div>
+            <h3>${isGroup ? 'Smile together.' : "Smile — this one's yours."}</h3>
+            <div class="hint">${camHint}</div>
+            <button class="cta cta-photo" data-act="startSnap"><img src="images/camera-icon.webp" alt="">${isGroup?'Take the group photo':'Take the photo'}</button>
+          </div>
+        </div>
+        <div class="linkRow" style="justify-content:center;margin-top:4px">
+          <button class="btn" data-act="back">${isGroup ? 'Back to constellation' : 'Back to reading'}</button>
+        </div>
+        <div id="note" aria-live="polite" style="min-height:1em"></div>
+      </main>`;
+    initSouvenir();
+    return;
+  }
+  if(S.screen==='explore'){
+    $app.innerHTML = `${topBar(true)}
+      <main style="gap:18px">
+        <div class="sectionSub">Where to next?</div>
+        <h2 class="sectionTitle">${S.people>1?'Which will you explore first — together?':'Pick one thing to explore this week.'}</h2>
+        ${cardPanel('present',rd,true)}
+        ${cardPanel('future',rd,true)}
+        <div class="linkRow" style="justify-content:center">
+          <button class="cta" data-act="restart">Start over</button>
+        </div>
+        <div id="note" aria-live="polite"></div>
+      </main>`;
+    return;
+  }
+  if(S.screen==='flyer'){
+    const c = rd.future;
+    const back = S.prevScreen || 'result';
+    $app.innerHTML = `${topBar(true)}
+      <main style="gap:14px">
+        <div class="sectionSub">The next step · ${esc(c.flyerSource || 'Local event')}</div>
+        <div class="flyerPage">
+          <img class="flyerBig" src="${esc(c.flyer)}" alt="${esc(c.flyerTitle||c.title)} flyer">
+          <div class="flyerInfo">
+            <h2>${esc(c.flyerTitle || c.title)}</h2>
+            <div class="src">${esc(c.flyerSource || '')}</div>
+            <p style="margin-top:14px">${esc(c.flyerBlurb || c.en)}</p>
+            <p class="note">Dates, venue status and ticketing on the flyer should be verified with the organiser before you plan a visit. The illustration above is one specific example of the kind of event this card points to.</p>
+          </div>
+          <div class="linkRow" style="justify-content:center;margin-top:4px">
+            ${c.ctaUrl ? `<a class="btn" href="${esc(c.ctaUrl)}" target="_blank" rel="noopener">${esc(c.ctaLabel||'Learn more')} ↗</a>` : ''}
+            <button class="cta" data-act="backFromFlyer">Back to your reading</button>
+          </div>
+        </div>
+      </main>`;
+    return;
+  }
+  if(S.screen==='library'){
+    $app.innerHTML = `${topBar(true)}
+      <main style="gap:18px">
+        <div class="libHeader">
+          <span class="libBadge">Proposed Indoor Installation · Group Prototype</span>
+          <h2 class="sectionTitle">Borrow a Newtown Voice</h2>
+          <p style="color:var(--mute);max-width:620px;margin:12px auto 0;font-size:15px">
+            Your next discovery isn't a place — it's a person. Visit the proposed Listening Library experience at Newtown Library on Brown Street. Borrow a resident's story, listen, and leave a little echo of your own.
+          </p>
+        </div>
+        <img class="libMap" src="images/newtown-map.jpg" alt="Map of Newtown showing Lucky Fortune Wall, Pride Square, Newtown Station, Camperdown Memorial Rest Park and Newtown Library">
+        <div class="panel" style="max-width:720px">
+          <div class="role">The Venue</div>
+          <h2 style="font-size:28px">Newtown Library</h2>
+          <p>8–10 Brown Street, Newtown NSW 2042</p>
+          <p style="color:var(--mute);font-size:13px;margin-top:6px">Verify address and opening hours with Inner West Council before any public use.</p>
+          <div class="linkRow">
+            <a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=Newtown+Library+Brown+Street+Newtown" target="_blank" rel="noopener">View Directions ↗</a>
+            <span class="btn off" aria-disabled="true">Learn more (link pending)</span>
+          </div>
+        </div>
+        <div class="panel" style="max-width:720px">
+          <div class="role">Inside the Installation</div>
+          <div class="libStep"><div class="n">1</div><div><div class="t">Borrow</div><div class="d">Choose a local resident's storybook from the shelf.</div></div></div>
+          <div class="libStep"><div class="n">2</div><div><div class="t">Listen</div><div class="d">Hear their voice through the headphones.</div></div></div>
+          <div class="libStep"><div class="n">3</div><div><div class="t">Respond</div><div class="d">Record a 15-second echo, or join a Listening Table conversation.</div></div></div>
+          <div class="libStep"><div class="n">4</div><div><div class="t">Connect</div><div class="d">Pin your place on the Connection Map; link stories with light-green thread, conversations with multicoloured thread.</div></div></div>
+          <p style="margin-top:14px;color:var(--mute);font-size:13px">This indoor installation is a proposed group prototype — not a service currently run by Newtown Library.</p>
+        </div>
+        <div class="linkRow" style="justify-content:center">
+          <button class="btn" data-act="back">Back to your reading</button>
+          <button class="cta" data-act="restart">Start over</button>
+        </div>
+      </main>`;
+    return;
+  }
+}
+
+function getInterestLabel(rd){
+  const i = INTERESTS.find(x=>x.id===rd.interest);
+  if(!i) return '';
+  if(rd.subpath==='mystical') return 'Mystical Newtown';
+  if(rd.subpath==='quiet') return i.theme;
+  return i.theme;
+}
+
+function slotHTML(role,rd){
+  const filled = S.revealed.includes(role);
+  const img = rd[role] && rd[role].image;
+  return `<div class="sl ${filled?'on':''}" data-slot="${role}">${filled?`<img src="${esc(img)}" alt="">`:esc(role)}</div>`;
+}
+function updateSlots(){
+  const rd = READINGS[S.readingId];
+  const c = document.getElementById('slots'); if(!c) return;
+  c.innerHTML = ROLES.map(r=>slotHTML(r,rd)).join('');
+  requestAnimationFrame(()=>{ c.querySelectorAll('.sl.on').forEach(el=>el.classList.add('flipped')); });
+}
+function updatePromptAndCta(){
+  const n = S.revealed.length;
+  const p = document.querySelector('.prompt');
+  if(p){
+    const nextRole = ROLES[n]||'future';
+    const txt = n<3 ? WHO[S.people][nextRole] : 'The reading is complete.';
+    p.innerHTML = esc(txt) + '<span class="cnt">'+n+' / 3</span>';
+  }
+  if(n===3){
+    /* V26: hide the gesture guide and ring hint when drawing is complete */
+    const guide = document.querySelector('.ggGuide'); if(guide) guide.style.display = 'none';
+    const hint = document.querySelector('main > .hint'); if(hint) hint.style.display = 'none';
+    if(!document.querySelector('[data-act="toResult"]')){
+      const main = document.querySelector('main');
+      const promptEl = main && main.querySelector('.prompt');
+      if(main && promptEl){
+        const b = document.createElement('button');
+        b.className='cta'; b.dataset.act='toResult';
+        const isLast = S.currentPlayer === S.people - 1;
+        b.textContent = S.people>1 ? (isLast ? 'See the shared adventure →' : 'Pass to next player →') : 'See your reading →';
+        b.style.margin = '10px 0 2px';
+        promptEl.insertAdjacentElement('afterend', b);
+      }
+    }
+  }
+}
+
+/* V25: progressive disclosure — Level 1 (title + poem) always; Level 2 (short summary) always;
+   Level 3 (full story + facts + CTA) collapsed by default, opens on tap. */
+function cardPanel(role,rd,showImage){
+  const c = rd[role];
+  let facts = '', acts = '';
+  if(role==='present' && c.place){
+    facts = `<div class="meta">${esc(c.place)}</div>`;
+    acts = c.mapUrl ? `<a class="btn" href="${esc(c.mapUrl)}" target="_blank" rel="noopener">View on map ↗</a>` : '';
+  }
+  if(role==='future'){
+    const label = c.ctaLabel || 'Learn more';
+    if(c.flyer){
+      acts = `<button class="btn" data-act="toFlyer">View the flyer ↗</button>`;
+    } else if(c.isLibraryCta){
+      acts = `<button class="btn" data-act="toLibrary">${esc(label)} →</button>`;
+    } else if(c.ctaUrl){
+      acts = `<a class="btn" href="${esc(c.ctaUrl)}" target="_blank" rel="noopener">${esc(label)} ↗</a>`;
+    } else {
+      acts = `<span class="btn off">${esc(label)} (link pending)</span>`;
+    }
+  }
+  /* V26: show everything inline — no Explore More collapse. */
+  const imgTag = (showImage && c.image)
+    ? `<img class="panelCard" src="${esc(c.image)}" alt="${esc(c.title)} card" loading="lazy">`
+    : '';
+  return `<div class="panel">
+    ${imgTag}
+    <div class="panelText">
+    <div class="role">${esc(c.role)}</div>
+    <h2>${esc(c.title)}</h2>
+    <div class="poem">${esc(c.poem)}</div>
+    <p>${esc(c.en)}</p>
+    ${facts}
+    ${acts ? `<div class="linkRow">${acts}</div>` : ''}
+    </div>
+  </div>`;
+}
+
+/* ---------- Click handling ---------- */
+$app.addEventListener('click', e=>{
+  const t = e.target.closest('button,[data-act]'); if(!t) return;
+  const a = t.dataset.act;
+  if(a==='start'){ initParticles(); startMusic(); if(!gest.on && !gest.loading) toggleGesture(); go('people'); }
+  else if(a==='confirmPeople'){
+    /* V26: lock the player count, initialize the archive, send player 1 to interest */
+    S.players = Array.from({length:S.people}, ()=>({interest:null,subpath:null,readingId:null,revealed:[],focus:null}));
+    S.currentPlayer = 0;
+    nextPlayerTurn();
+    go('interest');
+  }
+  else if(a==='startNextPlayer'){
+    /* V26: wipe the live fields and send the next player to interest */
+    nextPlayerTurn();
+    go('interest');
+  }
+  else if(a==='restart'){ reset(); }
+  else if(a==='back'){
+    if(S.screen==='draw'){ const i=INTERESTS.find(x=>x.id===S.interest); go(i && i.hasSubpath ? 'subpath' : 'interest'); }
+    else if(S.screen==='subpath'){ go('interest'); }
+    else if(S.screen==='result'){ go('draw'); }
+    else if(S.screen==='souvenir'){ souv.captured = null; go(S.people>1 ? 'constellation' : 'result'); }
+    else if(S.screen==='constellation'){ /* going back from constellation is messy; just restart */ reset(); }
+    else if(S.screen==='explore'){ go('result'); }
+    else if(S.screen==='library'){ go('explore'); }
+    else if(S.screen==='flyer'){ go(S.prevScreen || 'result'); S.prevScreen = null; }
+    else if(S.screen==='interest'){ /* interest after people picker: go back to people */ go('people'); }
+    else if(S.screen==='people'){ go('attract'); }
+    else { go('attract'); }
+  }
+  else if(t.dataset.int){ S.interest = t.dataset.int; render(); }
+  else if(t.dataset.mode){
+    /* V26: two-step picker — choosing solo locks people=1; choosing together waits for 2/3 */
+    S.mode = t.dataset.mode;
+    if(S.mode==='solo') S.people = 1;
+    else if(S.mode==='together' && S.people===1) S.people = 2; /* default to 2 */
+    render();
+  }
+  else if(t.dataset.ppl){ S.people = +t.dataset.ppl; render(); }
+  else if(t.dataset.sub){
+    const i = INTERESTS.find(x=>x.id===S.interest);
+    S.subpath = t.dataset.sub;
+    S.readingId = t.dataset.sub==='mystical' ? i.mysticalReading : i.defaultReading;
+    S.revealed = []; S.focus = null;
+    go('draw');
+  }
+  else if(a==='toNextFromInterest'){
+    const i = INTERESTS.find(x=>x.id===S.interest); if(!i) return;
+    if(i.hasSubpath){ go('subpath'); }
+    else { S.readingId = i.reading; S.revealed = []; S.focus = null; go('draw'); }
+  }
+  else if(a==='toResult'){
+    /* V26: if multi-player, archive this draw and either hand over or go to constellation */
+    if(S.people > 1){
+      archiveCurrentPlayer();
+      S.currentPlayer++;
+      if(S.currentPlayer < S.people){
+        go('handover');
+      } else {
+        history.replaceState(null,'','#/constellation');
+        go('constellation');
+      }
+    } else {
+      history.replaceState(null,'','#/result/'+S.readingId);
+      go('result');
+    }
+  }
+  else if(a==='toSouv'){ history.replaceState(null,'','#/souvenir/'+(S.readingId||'group')); go('souvenir'); }
+  else if(a==='toExplore'){ history.replaceState(null,'','#/explore/'+S.readingId); go('explore'); }
+  else if(a==='toLibrary'){ go('library'); }
+  else if(a==='toFlyer'){ S.prevScreen = S.screen; go('flyer'); }
+  else if(a==='backFromFlyer'){ go(S.prevScreen || 'result'); S.prevScreen = null; }
+  else if(a==='startSnap'){ startSouvenirCountdown(); }
+  else if(a==='retakeSouv'){ souv.captured = null; render(); setTimeout(initSouvenir, 50); }
+  else if(a==='dlSouv'){ downloadSouvenir(t); }
+  else if(a==='gest'){ toggleGesture(); }
+  else if(a==='mute'){ toggleMusic(); }
+  else if(a==='poster'){
+    const area = document.getElementById('posterArea');
+    const note = document.getElementById('note');
+    if(!area){ if(note) note.textContent = 'Could not find the result area to render.'; return; }
+    if(typeof html2canvas === 'undefined'){ if(note) note.textContent = 'Poster library did not load. Try again or check your connection.'; return; }
+    if(note) note.textContent = 'Generating your poster…';
+    t.disabled = true; t.textContent = 'Rendering…';
+    html2canvas(area, { backgroundColor:'#101018', scale:2, useCORS:true, logging:false })
+      .then(canvas=>{
+        const link = document.createElement('a');
+        link.download = 'lucky-fortune-wall-' + (S.readingId||'reading') + '.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        if(note) note.textContent = 'Poster saved to your downloads.';
+      })
+      .catch(e=>{ console.error('poster', e); if(note) note.textContent = 'Could not render the poster: ' + (e&&e.message||'unknown error'); })
+      .finally(()=>{ t.disabled = false; t.textContent = 'Save as poster'; });
+  }
+});
+
+/* ---------- Hash routing ---------- */
+function fromHash(){
+  const m = location.hash.match(/^#\/(result|explore|library)\/?([\w-]+)?/);
+  if(!m) return;
+  if(m[1]==='library'){ S.screen='library'; return; }
+  if(m[2] && READINGS[m[2]]){
+    const rd = READINGS[m[2]];
+    S.readingId = m[2]; S.interest = rd.interest; S.subpath = rd.subpath || null;
+    S.revealed = [...ROLES]; S.screen = m[1];
+  }
+}
+
+/* ============================================================
+   3D Fate Ring (full 360°)
+   ============================================================ */
+const RING = { N:15, rot:0, drawn:new Set(), locking:false, dragLast:null };
+function cardAngle(i){ return i * (360 / RING.N); }
+function focusIndex(){
+  let best=-1,bestD=999;
+  for(let i=0;i<RING.N;i++){
+    if(RING.drawn.has(i)) continue;
+    let a = (cardAngle(i) + RING.rot) % 360;
+    if(a>180) a-=360; if(a<-180) a+=360;
+    const d = Math.abs(a); if(d<bestD){ bestD=d; best=i; }
+  }
+  return best;
+}
+function buildRing(){
+  const inner = document.getElementById('ringInner'); if(!inner) return;
+  let html = '';
+  for(let i=0;i<RING.N;i++) html += `<div class="rc" data-ring="${i}" style="--card-ang:${cardAngle(i)}deg"><div class="face"></div></div>`;
+  inner.innerHTML = html;
+  updateRing();
+}
+function updateRing(){
+  const inner = document.getElementById('ringInner'); if(!inner) return;
+  inner.style.setProperty('--ring-rot', RING.rot.toFixed(2)+'deg');
+  const f = focusIndex();
+  for(let i=0;i<RING.N;i++){
+    const el = inner.children[i]; if(!el) continue;
+    el.classList.toggle('focus', i===f);
+    el.classList.toggle('drawn', RING.drawn.has(i));
+  }
+  const b = document.querySelector('.ring-badge b');
+  if(b) b.textContent = S.revealed.length + '/3';
+}
+function rotateRing(deg){ if(RING.locking) return; RING.rot = (RING.rot + deg) % 360; updateRing(); }
+function initRing(){
+  RING.drawn = new Set(); RING.rot = 0; RING.locking = false;
+  buildRing(); updateSlots();
+  const ring = document.getElementById('ring'); if(!ring) return;
+  ring.addEventListener('pointerdown', e=>{ RING.dragLast={x:e.clientX,y:e.clientY}; ring.setPointerCapture(e.pointerId); });
+  ring.addEventListener('pointermove', e=>{
+    if(!RING.dragLast) return;
+    const dx = e.clientX - RING.dragLast.x;
+    RING.dragLast = {x:e.clientX,y:e.clientY};
+    rotateRing(dx*0.4);
+  });
+  const endDrag = ()=>{ RING.dragLast=null; };
+  ring.addEventListener('pointerup', endDrag);
+  ring.addEventListener('pointercancel', endDrag);
+  ring.addEventListener('click', e=>{
+    const el = e.target.closest('.rc'); if(!el || el.classList.contains('drawn')) return;
+    const i = +el.dataset.ring;
+    if(i===focusIndex()) drawFocusCard();
+    else { RING.rot = -cardAngle(i); updateRing(); }
+  });
+}
+function drawFocusCard(){
+  if(RING.locking) return;
+  const i = focusIndex(); if(i<0) return;
+  const role = ROLES[S.revealed.length]; if(!role) return;
+  RING.locking = true;
+  const ring = document.getElementById('ring');
+  if(ring){
+    const r = ring.getBoundingClientRect();
+    particleBurst(r.left + r.width/2, r.top + r.height*0.5, 70);
+  }
+  /* V25: brief "Confirmed" flash on the focused card so the pick is unmistakable */
+  const inner = document.getElementById('ringInner');
+  if(inner && inner.children[i]){
+    const el = inner.children[i];
+    el.classList.remove('fist');
+    el.classList.add('confirmed');
+    setTimeout(()=>el.classList.remove('confirmed'), 650);
+  }
+  RING.drawn.add(i);
+  S.revealed.push(role); S.focus = role;
+  updateRing(); updateSlots(); updatePromptAndCta();
+  setTimeout(()=>{ RING.locking = false; }, 900);
+}
+
+/* ============================================================
+   Gesture: MediaPipe HandLandmarker + circle detection
+   ============================================================ */
+const gest = { on:false, loading:false, stream:null, lm:null, raf:0, lastTs:0 };
+function setStat(msg, sticky){
+  const el = document.getElementById('geststat'); if(!el) return;
+  clearTimeout(gest.statT);
+  if(msg){ el.textContent = msg; el.classList.add('on'); if(!sticky) gest.statT = setTimeout(()=>el.classList.remove('on'), 5000); }
+  else el.classList.remove('on');
+}
+async function toggleGesture(){
+  if(gest.loading) return;
+  if(gest.on){ disableGesture(); return; }
+  gest.loading = true; render(); setStat('Loading hand model… first time takes a few seconds.', true);
+  try {
+    if(!gest.lm){
+      const mod = await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/+esm');
+      const fs = await mod.FilesetResolver.forVisionTasks('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm');
+      gest.lm = await mod.HandLandmarker.createFromOptions(fs, {
+        baseOptions:{ modelAssetPath:'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task' },
+        numHands:1, runningMode:'VIDEO'
+      });
+    }
+    setStat('Requesting camera…', true);
+    gest.stream = await navigator.mediaDevices.getUserMedia({ video:{width:640,height:480,facingMode:'user'}, audio:false });
+    const v = document.getElementById('gestvid');
+    v.srcObject = gest.stream; await v.play(); v.classList.add('on');
+    gest.on = true; gest.loading = false;
+    setStat('Draw a circle in the air to spin the ring. Make a fist to pick the front card.');
+    render(); updateGestVisibility(); runGestLoop();
+  } catch(e){
+    gest.loading = false;
+    const msg = (e && e.name==='NotAllowedError') ? 'Camera access denied. Use touch instead.' : ('Camera unavailable: '+(e&&e.message||'error')+'. Use touch instead.');
+    setStat(msg); render();
+  }
+}
+function disableGesture(silent){
+  const was = gest.on; gest.on = false;
+  cancelAnimationFrame(gest.raf);
+  if(gest.stream){ gest.stream.getTracks().forEach(t=>t.stop()); gest.stream = null; }
+  const v = document.getElementById('gestvid'); if(v){ v.srcObject=null; v.classList.remove('on'); }
+  const c = document.getElementById('gestcur'); if(c) c.classList.remove('on');
+  circleG.pts.length = 0; fistReset();
+  if(was && !silent) setStat('Camera off.');
+  render();
+}
+function runGestLoop(){
+  if(!gest.on) return;
+  const v = document.getElementById('gestvid');
+  if(v && v.readyState>=2 && gest.lm){
+    const ts = performance.now();
+    if(ts - gest.lastTs > 50){ gest.lastTs = ts;
+      try {
+        const res = gest.lm.detectForVideo(v, ts);
+        if(res && res.landmarks && res.landmarks[0]){
+          const lm = res.landmarks[0];
+          const tip = lm[8];
+          // Cursor position: index finger tip when open, middle MCP when closed (stable centre)
+          const fist = isFist(lm);
+          const anchor = fist ? lm[9] : tip;
+          const x = (1-anchor.x) * window.innerWidth;
+          const y = anchor.y * window.innerHeight;
+          showCursor(x, y, fist);
+          // Gesture: draw-page uses fist to pick card; result-page uses peace sign to capture
+          if(S.screen === 'draw'){
+            fistStep(fist, x, y);
+            if(!fist) circleStep(x, y);
+            else circleG.pts.length = 0;
+          } else if(S.screen === 'souvenir' && !souv.captured && !souv.countdown){
+            if(isPeaceSign(res.landmarks[0])) startSouvenirCountdown();
+          } else {
+            circleG.pts.length = 0; fistReset();
+          }
+        } else {
+          hideCursor(); circleG.pts.length = 0; fistReset();
+        }
+      } catch(e){}
+    }
+  }
+  gest.raf = requestAnimationFrame(runGestLoop);
+}
+function showCursor(x,y,fist){
+  const c = document.getElementById('gestcur'); if(!c) return;
+  // Only show cursor on the draw screen
+  if(S.screen !== 'draw'){ c.classList.remove('on'); return; }
+  c.classList.add('on'); c.style.left=x+'px'; c.style.top=y+'px';
+  c.style.borderColor = fist ? 'var(--coral)' : 'var(--gold)';
+  c.style.background = fist ? 'rgba(244,168,150,.5)' : 'rgba(209,185,140,.35)';
+  if(!fist && Math.random()<0.35) particleSpawn(x,y,1,'trail');
+}
+function hideCursor(){
+  const c = document.getElementById('gestcur'); if(c) c.classList.remove('on');
+  const prev = document.querySelector('.gest-aim'); if(prev) prev.classList.remove('gest-aim');
+}
+
+/* Fist detection:
+   Compare each curled fingertip's distance to the wrist against hand size
+   (wrist→index-MCP). Open fingers extend 1.9+ hand-sizes from wrist;
+   curled fingers sit ≤1.5 hand-sizes. At least 3 of 4 curled = fist. */
+/* Fist detection — robust to hand orientation.
+   For each finger (index, middle, ring, pinky), compare the fingertip's
+   distance to the wrist against the middle-knuckle (PIP)'s distance to
+   the wrist. An EXTENDED finger has its tip farther from the wrist than
+   the PIP (tip ≈ 1.5–2× PIP). A CURLED finger has the tip at or inside
+   the PIP's distance (ratio ≤ 1.1). All four must be curled to count as
+   a fist — tightest practical threshold that still works at any hand
+   angle. */
+function isFist(lm){
+  const w = lm[0];
+  const tipI = [8, 12, 16, 20];
+  const pipI = [6, 10, 14, 18];
+  let curled = 0;
+  for(let i=0; i<4; i++){
+    const tip = lm[tipI[i]], pip = lm[pipI[i]];
+    const dTip = Math.hypot(tip.x - w.x, tip.y - w.y);
+    const dPip = Math.hypot(pip.x - w.x, pip.y - w.y);
+    if(dTip < dPip * 1.1) curled++;
+  }
+  return curled >= 4;
+}
+
+/* Fist gesture → pick focus card. 280 ms hold prevents accidental trigger.
+   Once triggered, hand must OPEN (curled < 2) before next fist is accepted. */
+const fist = { startT:0, armed:true, lastX:0, lastY:0 };
+const FIST_HOLD_MS = 280;
+function fistStep(isF, x, y){
+  const now = performance.now();
+  const ring = document.getElementById('fistRing');
+  fist.lastX = x; fist.lastY = y;
+  if(isF){
+    if(!fist.startT) fist.startT = now;
+    const p = Math.min(1, (now - fist.startT) / FIST_HOLD_MS);
+    if(ring){
+      ring.classList.add('on');
+      ring.style.left = x+'px'; ring.style.top = y+'px';
+      ring.style.setProperty('--fp', p);
+    }
+    // show "fist" state on the focus card
+    const inner = document.getElementById('ringInner');
+    if(inner){
+      const f = focusIndex();
+      for(let i=0;i<RING.N;i++){
+        const el = inner.children[i]; if(!el) continue;
+        el.classList.toggle('fist', i === f);
+      }
+    }
+    if(p >= 1 && fist.armed && !RING.locking){
+      fist.armed = false;
+      if(ring) ring.classList.remove('on');
+      particleBurst(x, y, 50);
+      if(S.screen === 'draw'){
+        drawFocusCard();
+      } else {
+        // Click whatever button is under the cursor
+        const el = document.elementFromPoint(x, y);
+        const btn = (el && el.closest) ? el.closest('button,a.btn') : null;
+        if(btn && !btn.disabled) btn.click();
+      }
+    }
+  } else {
+    // Hand opened → reset progress; re-arm after a short grace
+    fist.startT = 0;
+    fist.armed = true;
+    if(ring){ ring.classList.remove('on'); ring.style.setProperty('--fp', 0); }
+    const inner = document.getElementById('ringInner');
+    if(inner) for(let i=0;i<RING.N;i++){ const el = inner.children[i]; if(el) el.classList.remove('fist'); }
+  }
+}
+/* How many fingers are curled right now (0-4). Used for the open-hand check. */
+function curledCount(lm){
+  const w = lm[0];
+  const tipI = [8, 12, 16, 20];
+  const pipI = [6, 10, 14, 18];
+  let c = 0;
+  for(let i=0;i<4;i++){
+    const dTip = Math.hypot(lm[tipI[i]].x - w.x, lm[tipI[i]].y - w.y);
+    const dPip = Math.hypot(lm[pipI[i]].x - w.x, lm[pipI[i]].y - w.y);
+    if(dTip < dPip * 1.1) c++;
+  }
+  return c;
+}
+/* Peace sign ✌️ — index + middle extended; ring + pinky curled.
+   Separate ratios for "clearly extended" vs "clearly curled" so a
+   lazy ring finger still counts and a half-open index still extends. */
+function isPeaceSign(lm){
+  const w = lm[0];
+  const tipI = [8, 12, 16, 20];
+  const pipI = [6, 10, 14, 18];
+  const ratio = i => {
+    const dTip = Math.hypot(lm[tipI[i]].x - w.x, lm[tipI[i]].y - w.y);
+    const dPip = Math.hypot(lm[pipI[i]].x - w.x, lm[pipI[i]].y - w.y);
+    return dTip / dPip;
+  };
+  const ext = i => ratio(i) > 1.08;   // extended if tip is noticeably farther than PIP
+  const cur = i => ratio(i) < 1.35;   // curled if tip is NOT much farther (lenient so ring finger counts)
+  // Index + middle extended, ring + pinky NOT fully extended
+  return ext(0) && ext(1) && cur(2) && cur(3);
+}
+function fistReset(){
+  fist.startT = 0; fist.armed = true;
+  const ring = document.getElementById('fistRing');
+  if(ring){ ring.classList.remove('on'); ring.style.setProperty('--fp', 0); }
+  const inner = document.getElementById('ringInner');
+  if(inner) for(let i=0;i<RING.N;i++){ const el = inner.children[i]; if(el) el.classList.remove('fist'); }
+}
+
+/* Circle gesture — spin the ring (only runs when hand is open) */
+const circleG = { pts:[] };
+function circleStep(x,y){
+  const now = performance.now();
+  circleG.pts.push({x,y,t:now});
+  while(circleG.pts.length && now - circleG.pts[0].t > 450) circleG.pts.shift();
+  if(circleG.pts.length < 3) return;
+  const n = circleG.pts.length;
+  const p1 = circleG.pts[n-2], p2 = circleG.pts[n-1];
+  const dist = Math.hypot(p2.x-p1.x, p2.y-p1.y);
+  if(dist < 2.5) return;
+  let cx=0, cy=0; for(const p of circleG.pts){ cx+=p.x; cy+=p.y; } cx/=n; cy/=n;
+  const r2 = (p2.x-cx)**2 + (p2.y-cy)**2;
+  if(r2 < 625) return;  // 25px min radius
+  const a1 = Math.atan2(p1.y-cy, p1.x-cx);
+  const a2 = Math.atan2(p2.y-cy, p2.x-cx);
+  let dA = a2 - a1;
+  if(dA > Math.PI) dA -= 2*Math.PI;
+  if(dA < -Math.PI) dA += 2*Math.PI;
+  rotateRing(-(dA*180/Math.PI)*1.4);
+}
+
+/* ============================================================
+   Souvenir — selfie + fortune reading composite poster
+   ============================================================ */
+async function initSouvenir(){
+  const v = document.getElementById('selfVid'); if(!v) return;
+  try {
+    if(!gest.stream){
+      gest.stream = await navigator.mediaDevices.getUserMedia({ video:{ width:720, height:960, facingMode:'user' }, audio:false });
+    }
+    v.srcObject = gest.stream;
+    await v.play();
+  } catch(e){
+    const n = document.getElementById('note');
+    if(n) n.textContent = 'Camera is needed to take a photo. ' + (e.name==='NotAllowedError'?'Please allow the camera.':(e.message||''));
+  }
+}
+function startSouvenirCountdown(){
+  if(souv.countdown) return;
+  const cd = document.getElementById('cdown'); if(!cd) return;
+  let n = 3; cd.textContent = n;
+  souv.countdown = setInterval(()=>{
+    n--;
+    if(n > 0){ cd.textContent = n; }
+    else {
+      clearInterval(souv.countdown); souv.countdown = null;
+      cd.textContent = '';
+      cd.classList.add('flash');
+      setTimeout(()=>cd.classList.remove('flash'), 600);
+      takeSouvenirSnap();
+    }
+  }, 1000);
+}
+function takeSouvenirSnap(){
+  const v = document.getElementById('selfVid'); if(!v){ return; }
+  const w = v.videoWidth || 720, h = v.videoHeight || 960;
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  const ctx = c.getContext('2d');
+  // Un-mirror (video is CSS-mirrored for the user, but we want the snapshot un-mirrored for sharing)
+  ctx.translate(w, 0); ctx.scale(-1, 1);
+  ctx.drawImage(v, 0, 0, w, h);
+  souv.captured = c.toDataURL('image/jpeg', 0.9);
+  render();
+}
+async function downloadSouvenir(btn){
+  const el = document.getElementById('souvPoster');
+  const note = document.getElementById('note');
+  if(!el){ if(note) note.textContent = 'Souvenir not ready.'; return; }
+  if(typeof html2canvas === 'undefined'){ if(note) note.textContent = 'Download library not loaded. Check your connection.'; return; }
+  if(note) note.textContent = 'Rendering your souvenir…';
+  if(btn){ btn.disabled = true; btn.textContent = 'Rendering…'; }
+  try {
+    const canvas = await html2canvas(el, { backgroundColor:null, scale:2, useCORS:true, logging:false });
+    const link = document.createElement('a');
+    link.download = 'newtown-souvenir-' + Date.now() + '.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    if(note) note.textContent = 'Saved to your downloads.';
+  } catch(e){
+    console.error('souvenir', e);
+    if(note) note.textContent = 'Could not save: ' + (e&&e.message||'unknown error');
+  }
+  if(btn){ btn.disabled = false; btn.textContent = 'Save to your device'; }
+}
+
+/* ============================================================
+   Gold-dust particles
+   ============================================================ */
+const PCANV = { ctx:null, parts:[], raf:0, w:0, h:0 };
+function initParticles(){
+  const c = document.getElementById('particles'); if(!c) return;
+  const dpr = Math.min(window.devicePixelRatio||1, 2);
+  const resize = ()=>{
+    PCANV.w = window.innerWidth; PCANV.h = window.innerHeight;
+    c.width = PCANV.w*dpr; c.height = PCANV.h*dpr;
+    c.style.width = PCANV.w+'px'; c.style.height = PCANV.h+'px';
+    PCANV.ctx = c.getContext('2d'); PCANV.ctx.scale(dpr,dpr);
+  };
+  resize(); window.addEventListener('resize', resize);
+  if(!PCANV.raf) renderParticles();
+}
+function particleSpawn(x,y,n,type){
+  for(let i=0;i<n;i++){
+    const a = Math.random()*Math.PI*2;
+    const sp = type==='trail' ? Math.random()*0.6 : Math.random()*4+1;
+    PCANV.parts.push({
+      x:x+(Math.random()-0.5)*6, y:y+(Math.random()-0.5)*6,
+      vx:Math.cos(a)*sp, vy:Math.sin(a)*sp - (type==='trail'?0.2:0.6),
+      life:1, decay:type==='trail'?0.025:0.012,
+      size:1+Math.random()*(type==='trail'?1.6:3),
+      color:Math.random()<0.88?'#D1B98C':(Math.random()<0.5?'#9ED5CE':'#F0B9B2'),
+    });
+  }
+  if(PCANV.parts.length>500) PCANV.parts.splice(0, PCANV.parts.length-500);
+}
+function particleBurst(x,y,n){
+  for(let i=0;i<n;i++){
+    const a = Math.random()*Math.PI*2;
+    const sp = Math.random()*8+2;
+    PCANV.parts.push({
+      x,y, vx:Math.cos(a)*sp, vy:Math.sin(a)*sp-3,
+      life:1, decay:0.011, size:1+Math.random()*3.5,
+      color:Math.random()<0.85?'#D1B98C':(Math.random()<0.5?'#F0B9B2':'#9ED5CE'),
+    });
+  }
+}
+function renderParticles(){
+  const ctx = PCANV.ctx;
+  if(!ctx){ PCANV.raf = requestAnimationFrame(renderParticles); return; }
+  ctx.clearRect(0,0,PCANV.w,PCANV.h);
+  for(let i=PCANV.parts.length-1;i>=0;i--){
+    const p = PCANV.parts[i];
+    p.x+=p.vx; p.y+=p.vy; p.vy+=0.08; p.vx*=0.99; p.life-=p.decay;
+    if(p.life<=0){ PCANV.parts.splice(i,1); continue; }
+    ctx.globalAlpha = Math.max(0,p.life);
+    ctx.fillStyle = p.color; ctx.shadowColor = p.color; ctx.shadowBlur = 10;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill();
+  }
+  ctx.globalAlpha=1; ctx.shadowBlur=0;
+  PCANV.raf = requestAnimationFrame(renderParticles);
+}
+
+/* ============================================================
+   Background music: HTMLAudioElement loop with fade in/out
+   ============================================================ */
+const audio = { el:null, on:false, fadeI:null, targetVol:0.3 };
+function ensureAudio(){
+  if(audio.el) return audio.el;
+  const el = new Audio('audio/musicbox.mp3');
+  el.loop = true; el.preload = 'auto'; el.volume = 0;
+  el.addEventListener('error', ()=>{ setStat('Could not load music file.'); audio.on=false; try{render();}catch(e){} });
+  audio.el = el; return el;
+}
+function fadeTo(target, dur, done){
+  if(audio.fadeI){ clearInterval(audio.fadeI); audio.fadeI = null; }
+  if(!audio.el){ if(done) done(); return; }
+  const start = audio.el.volume, t0 = performance.now();
+  audio.fadeI = setInterval(()=>{
+    const t = Math.min(1,(performance.now()-t0)/dur);
+    try{ audio.el.volume = Math.max(0,Math.min(1, start+(target-start)*t)); }catch(e){}
+    if(t>=1){ clearInterval(audio.fadeI); audio.fadeI=null; if(done) done(); }
+  }, 40);
+}
+function startMusic(){
+  try {
+    const el = ensureAudio(); el.volume = 0;
+    const p = el.play();
+    if(p && p.catch) p.catch(e=>{ setStat('Audio blocked by the browser. Tap ♪ again.'); });
+    fadeTo(audio.targetVol, 1500);
+    audio.on = true; render();
+  } catch(e){ setStat('Audio failed to start.'); }
+}
+function stopMusic(){
+  audio.on = false;
+  if(!audio.el){ try{render();}catch(e){} return; }
+  fadeTo(0, 700, ()=>{ try{ audio.el.pause(); }catch(e){} });
+  try{render();}catch(e){}
+}
+function toggleMusic(){ if(audio.on) stopMusic(); else startMusic(); }
+
+/* ============================================================
+   Ambient background stars (very subtle, static)
+   ============================================================ */
+function buildStars(){
+  const g = document.getElementById('starG'); if(!g) return;
+  const svg = g.ownerSVGElement; svg.setAttribute('width',window.innerWidth); svg.setAttribute('height',window.innerHeight);
+  let s = '';
+  const N = 90;
+  for(let i=0;i<N;i++){
+    const x = Math.random()*window.innerWidth;
+    const y = Math.random()*window.innerHeight;
+    const r = Math.random()*1.1 + 0.3;
+    const o = Math.random()*0.55 + 0.1;
+    s += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(2)}" fill="#D1B98C" opacity="${o.toFixed(2)}"/>`;
+  }
+  g.innerHTML = s;
+}
+window.addEventListener('resize', buildStars);
+
+/* ---------- Clean-up on unload / tab hidden ---------- */
+window.addEventListener('beforeunload', ()=>{ disableGesture(true); stopMusic(); });
+document.addEventListener('visibilitychange', ()=>{ if(document.hidden && gest.on) disableGesture(true); });
+
+/* ---------- Error surface (so page never silently white-screens) ---------- */
+window.addEventListener('error', ev=>{
+  const el = document.getElementById('geststat'); if(!el) return;
+  el.textContent = 'JS error: '+(ev.message||'unknown')+' — '+(ev.filename||'')+':'+(ev.lineno||'');
+  el.classList.add('on');
+});
+
+/* ---------- Boot ---------- */
+try { buildStars(); } catch(e){}
+try { fromHash(); } catch(e){}
+try { initParticles(); } catch(e){}
+try { render(); } catch(e){
+  console.error(e);
+  document.getElementById('app').innerHTML = '<div style="padding:40px;max-width:600px;margin:40px auto;background:#1E1A2A;border:1px solid #D1B98C;border-radius:4px"><h2 style="font-family:Georgia,serif;color:#D1B98C;margin:0 0 12px">Something went wrong.</h2><p>'+String(e&&e.message||e)+'</p></div>';
+}
+</script>
+</body>
+</html>
+
+</body></html>
